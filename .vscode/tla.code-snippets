@@ -1,0 +1,75 @@
+{
+  "TLA+ Module Boilerplate": {
+    "scope": "tlaplus,tla,plaintext,",
+    "prefix": ["tla", "module"],
+    "description": "Standard TLA+ specification boilerplate",
+    "body": [
+      "------------------------------ MODULE ${TM_FILENAME_BASE} ------------------------------",
+      "EXTENDS Naturals, Sequences, FiniteSets, TLC",
+      "",
+      "CONSTANTS",
+      "    ${1:Constants}",
+      "",
+      "VARIABLES",
+      "    ${2:vars}",
+      "",
+      "vars == <<${2:vars}>>",
+      "",
+      "TypeOK ==",
+      "    ${3:TRUE}",
+      "",
+      "Init ==",
+      "    ${4:TRUE}",
+      "",
+      "Next ==",
+      "    ${5:TRUE}",
+      "",
+      "Spec == Init /\\ [][Next]_vars",
+      "",
+      "============================================================================="
+    ]
+  },
+  "PlusCal C-Syntax Boilerplate": {
+    "scope": "tlaplus,tla,plaintext,",
+    "prefix": ["pluscal", "pcal"],
+    "description": "PlusCal algorithm boilerplate",
+    "body": [
+      "------------------------------ MODULE ${TM_FILENAME_BASE} ------------------------------",
+      "EXTENDS Naturals, Sequences, TLC",
+      "",
+      "(* --algorithm ${TM_FILENAME_BASE}",
+      "variables",
+      "    ${1:x = 0;}",
+      "",
+      "define",
+      "    TypeOK == ${2:TRUE}",
+      "end define;",
+      "",
+      "fair process ${3:main} = 1",
+      "begin",
+      "    ${4:Step1:}",
+      "        ${5:skip;}",
+      "end process;",
+      "",
+      "end algorithm; *)",
+      "\\* BEGIN TRANSLATION",
+      "\\* END TRANSLATION",
+      "",
+      "============================================================================="
+    ]
+  },
+  "TLC Config Boilerplate": {
+    "scope": "ini,plaintext,",
+    "prefix": ["cfg", "tlc"],
+    "description": "TLC model checker configuration file boilerplate",
+    "body": [
+      "SPECIFICATION Spec",
+      "",
+      "INVARIANT",
+      "    ${1:TypeOK}",
+      "",
+      "CONSTANT",
+      "    ${2:Constants}"
+    ]
+  }
+}

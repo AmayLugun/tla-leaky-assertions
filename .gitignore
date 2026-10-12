@@ -1,0 +1,29 @@
+# ==========================================
+# TLC Model Checker Artifacts & Checkpoints
+# ==========================================
+states/
+*.out
+*.dump
+*.dot
+*.old
+MC.*
+model/
+TE.tla
+TE.cfg
+
+# ==========================================
+# macOS System Files (External drives)
+# ==========================================
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# ==========================================
+# Editors
+# ==========================================
+# Keep .vscode/settings.json & .vscode/tla.code-snippets committed for shared IDE settings
+# Uncomment below if you want personal VS Code settings ignored:
+# .vscode/*
+# !.vscode/settings.json
+# !.vscode/tla.code-snippets

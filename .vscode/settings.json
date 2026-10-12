@@ -1,0 +1,11 @@
+{
+  "tlaplus.tlc.modelChecker.options": "-coverage 1",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.tla": "${capture}.cfg, ${capture}.out"
+  },
+  "files.exclude": {
+    "**/states": false
+  }
+}
