@@ -174,27 +174,3 @@ ExpectedTime == Base + (IF Fixed THEN BITS * MulCost ELSE 0)
 ConstantTime == Finished => Elapsed = ExpectedTime
 
 =============================================================================
-
-SPECIFICATION Spec
-CONSTANTS
-    N = 15
-    Y0 = 7
-    BITS = 4
-    MulCost = 3
-    SqCost = 2
-    PrintCost = 1
-    Fixed = TRUE
-    Threshold = 2
-
-INVARIANT 
-    TypeOK
-    Correct
-    ConstantTime
-
-PROPERTY 
-    Termination
-
-CHECK_DEADLOCK FALSE
-
-
-
