@@ -6,10 +6,13 @@ states/
 *.dump
 *.dot
 *.old
+*.chk
+*.log
 MC.*
+TE.*
+*_TE.*
 model/
-TE.tla
-TE.cfg
+*.toolbox/
 
 # ==========================================
 # macOS System Files (External drives)
