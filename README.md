@@ -26,6 +26,9 @@ Formal specifications and experiments in **TLA+** and **PlusCal** modeling timin
 ├── SeqLock/
 │   ├── SeqLock.tla            # PlusCal model for persistent memory leaks & cache flush mitigation
 │   └── SeqLock.cfg            # TLC model configuration
+├── documents/
+│   ├── report.tex             # LaTeX source of evaluation report and model analysis
+│   └── report.pdf             # Compiled experimental evaluation report
 ├── .vscode/
 │   ├── settings.json          # VS Code TLC settings & file nesting
 │   └── tla.code-snippets      # Boilerplate snippets for TLA+, PlusCal & CFG
@@ -47,19 +50,7 @@ Formal specifications and experiments in **TLA+** and **PlusCal** modeling timin
   * `FunctionalPost`: Verifies overall system functional correctness.
   * `NoTimingLeak` / `NoOrderLeak`: Security checks that fail in the presence of side channels, producing counterexample traces that illustrate the leak.
 
-### 2. `ModSqLeaks`
-* **File**: `ModSqLeaks/ModSqLeaks.tla`
-* **Concept**: Models the square-and-multiply algorithm for modular exponentiation ($y^K \pmod N$).
-* **Key Observations**:
-  * **Variable-Time Execution (`Fixed = FALSE`)**: Branching on secret key bits introduces execution time variance directly proportional to the key's Hamming weight ($\text{HW}(K)$).
-  * **Leaky Assertion**: Verifies that elapsed execution time allows an observer to reconstruct the secret key's Hamming weight or threshold.
-  * **Constant-Time Countermeasure (`Fixed = TRUE`)**: Balances the execution paths by performing operations every round, ensuring constant-time execution (`ConstantTime` invariant holds).
-* **Properties Verified**:
-  * `Correct`: Algorithm produces correct mathematical exponentiation.
-  * `LeakyAssertion`: Formalizes the relationship between elapsed time and the secret key.
-  * `ConstantTime`: Verifies execution time is independent of secret key data.
-
-### 3. `InternalTiming`
+### 2. `InternalTiming`
 * **File**: `InternalTiming/InternalTiming.tla`
 * **Concept**: Models two concurrent threads scheduled under a deterministic round-robin scheduler. Thread 1 conditionally branches based on secret $h \in \{0, 1\}$.
 * **Key Observations**:
@@ -71,7 +62,7 @@ Formal specifications and experiments in **TLA+** and **PlusCal** modeling timin
   * `LA_Timing` / `LA_Time_Low` / `LA_Time_High`: Formal leaky assertions linking elapsed execution time directly to secret $h$.
   * `NoTimingLeak` / `ConstantTime`: Security checks that fail under TLC model checking, producing counterexample traces witnessing the timing leak.
 
-### 4. `InternalTimingTransformed`
+### 3. `InternalTimingTransformed`
 * **File**: `InternalTimingTransformed/Transformed.tla`
 * **Concept**: Applies source-level branch padding (`l4_pad: skip`) to balance execution paths across secret branches, eliminating the round-robin internal timing covert channel.
 * **Key Observations**:
@@ -80,6 +71,18 @@ Formal specifications and experiments in **TLA+** and **PlusCal** modeling timin
   * `FunctionalPost`: Verifies system functional correctness ($h_2 = 0$ and both threads terminated).
   * `ConstantTime` / `NoTimingLeak`: Verifies elapsed execution time is invariant to secret data (passes).
   * `LA_Timing`: Leaky assertion is defeated / broken by mitigation.
+
+### 4. `ModSqLeaks`
+* **File**: `ModSqLeaks/ModSqLeaks.tla`
+* **Concept**: Models the square-and-multiply algorithm for modular exponentiation ($y^K \pmod N$).
+* **Key Observations**:
+  * **Variable-Time Execution (`Fixed = FALSE`)**: Branching on secret key bits introduces execution time variance directly proportional to the key's Hamming weight ($\text{HW}(K)$).
+  * **Leaky Assertion**: Verifies that elapsed execution time allows an observer to reconstruct the secret key's Hamming weight or threshold.
+  * **Constant-Time Countermeasure (`Fixed = TRUE`)**: Balances the execution paths by performing operations every round, ensuring constant-time execution (`ConstantTime` invariant holds).
+* **Properties Verified**:
+  * `Correct`: Algorithm produces correct mathematical exponentiation.
+  * `LeakyAssertion`: Formalizes the relationship between elapsed time and the secret key.
+  * `ConstantTime`: Verifies execution time is independent of secret key data.
 
 ### 5. `WebServiceLeak`
 * **File**: `WebServiceLeak/WebServiceLeak.tla`
@@ -108,6 +111,27 @@ Formal specifications and experiments in **TLA+** and **PlusCal** modeling timin
   * `G_Guarantee`: Persistent memory consistency guarantee.
   * `NoInformationLeak`: Value-dependent non-interference property (fails when `Fixed = FALSE` witnessing the leak counterexample; passes when `Fixed = TRUE`).
   * `LA_PersistentLeak`: Sound Floyd-Hoare leaky assertion confirming an external observer reading $1$ from the low output channel post-crash uniquely determines the secret $h = 1$.
+
+---
+
+## 📊 Experimental Evaluation Summary
+
+The table below summarizes the model checking statistics obtained from TLC runs across all six benchmark suites. The state-space exploration metrics reflect breadth-first model checking on each specification.
+
+| Benchmark Program | No. of Threads ($n$) | Total States | Depth | TLC Time (ms) | Leak Found? (Yes/No) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `ConcurrentLeak` | 2 | 44 | 5 | 571 | **Yes** |
+| `InternalTiming` | 2 | 20 | 10 | 706 | **Yes** |
+| `InternalTimingTransformed` | 2 | 22 | 10 | 586 | **No** |
+| `ModSqLeaks` | 1 | 322 | 21 | 466 | **Yes** |
+| `WebServiceLeak` | 1 | 17 | 5 | 485 | **Yes** |
+| `SeqLock` | 3 | 3 | 2 | 729 | **Yes** |
+
+> **Note on Transformed and Mitigated Programs:**
+> * In `InternalTimingTransformed`, the branch-padding mitigation successfully eliminates execution-time variance ($\Delta = 9$ across all inputs), resulting in **No** leak found (all non-interference invariants pass).
+> * For `WebServiceLeak` and `SeqLock`, the table presents the vulnerable baseline configuration (`Fixed = FALSE`). When the mitigation toggle is engaged (`Fixed = TRUE`), the leak is completely eliminated, and TLC reports 0 violations across all reachable states.
+>
+> For full mathematical formalizations, trace counterexamples, and security proofs, see the [Experimental Evaluation Report](documents/report.pdf) ([LaTeX source](documents/report.tex)).
 
 
 ---
@@ -138,14 +162,14 @@ Using `tla2tools.jar`:
 # Check ConcurrentLeak
 java -jar tla2tools.jar -config ConcurrentLeaks/ConcurrentLeak.cfg ConcurrentLeaks/ConcurrentLeak.tla
 
-# Check ModSqLeaks
-java -jar tla2tools.jar -config ModSqLeaks/ModSqLeaks.cfg ModSqLeaks/ModSqLeaks.tla
-
 # Check InternalTiming
 java -jar tla2tools.jar -config InternalTiming/InternalTiming.cfg InternalTiming/InternalTiming.tla
 
 # Check InternalTimingTransformed
 java -jar tla2tools.jar -config InternalTimingTransformed/Transformed.cfg InternalTimingTransformed/Transformed.tla
+
+# Check ModSqLeaks
+java -jar tla2tools.jar -config ModSqLeaks/ModSqLeaks.cfg ModSqLeaks/ModSqLeaks.tla
 
 # Check WebServiceLeak
 java -jar tla2tools.jar -config WebServiceLeak/WebServiceLeak.cfg WebServiceLeak/WebServiceLeak.tla

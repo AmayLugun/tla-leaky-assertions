@@ -74,7 +74,7 @@ Table~\ref{tab:benchmarks} summarizes the model checking statistics obtained fro
 
 \bigskip
 
-\section{Benchmark Program Writeups}
+\section{Reports on the Programs}
 
 \subsection{ConcurrentLeak (\texttt{ConcurrentLeaks/ConcurrentLeak.tla})}
 
@@ -153,10 +153,10 @@ Evaluated at process termination (\texttt{Observed}):
 
 \bigskip
 
-\subsection{InternalTimingTransformed (\texttt{InternalTimingTransformed/Transformed.tla})}
+\subsection{Transformed (\texttt{InternalTimingTransformed/Transformed.tla})}
 
 \subsubsection{1. How the Program is Leaking Information (Mitigation Analysis)}
-\texttt{InternalTimingTransformed} represents the mitigated countermeasure specification. To eliminate the internal timing covert channel caused by the branch imbalance in Thread 1, source-level \emph{branch padding} is introduced.
+\texttt{Transformed} represents the mitigated countermeasure specification. To eliminate the internal timing covert channel caused by the branch imbalance in Thread 1, source-level \emph{branch padding} is introduced.
 \begin{itemize}
     \item On the shorter path ($h = 0$), an auxiliary padding step is inserted:
     $$\texttt{l4\_pad: await turn = 1; skip; t := t + 1; turn := 2; goto l5;}$$
