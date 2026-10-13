@@ -2,6 +2,7 @@
 # TLC Model Checker Artifacts & Checkpoints
 # ==========================================
 states/
+**/states/
 *.out
 *.dump
 *.dot
@@ -13,6 +14,26 @@ TE.*
 *_TE.*
 model/
 *.toolbox/
+*.tlc
+
+# ==========================================
+# LaTeX Auxiliary & Build Artifacts
+# ==========================================
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.lot
+*.lof
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
 
 # ==========================================
 # macOS System Files (External drives)
@@ -23,8 +44,11 @@ model/
 .Trashes
 
 # ==========================================
-# Editors
+# Editors & Temporary Files
 # ==========================================
+*~
+*.swp
+*.swo
 # Keep .vscode/settings.json & .vscode/tla.code-snippets committed for shared IDE settings
 # Uncomment below if you want personal VS Code settings ignored:
 # .vscode/*
