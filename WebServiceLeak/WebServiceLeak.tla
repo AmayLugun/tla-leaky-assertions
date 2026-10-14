@@ -172,7 +172,7 @@ FunctionalCorrect == Observed =>
 FunctionalPost == FunctionalCorrect
 
 (* ============================================================================= *)
-(* OBSERVATION & AUXILIARY TIME LAYER (Paper Section IV.A & Definition 2)       *)
+(* OBSERVATION & AUXILIARY TIME LAYER *)
 (* 1. Public Entry Statement at l0: records T_start := t, emits out = <<"REQ">>  *)
 (* 2. Public Exit Statement at l_exit: records t_prime := t, emits out = Append   *)
 (* 3. Auxiliary Elapsed Time: Delta == t_prime - T_start                        *)
@@ -197,7 +197,7 @@ Calib0 == (~Fixed /\ Observed /\ result = "error message" /\ h = 0) => Delta = D
 Calib1 == (~Fixed /\ Observed /\ result = "error message" /\ h = 1) => Delta = Delta_hi
 
 (* ============================================================================= *)
-(* LEAKY ASSERTIONS AT PUBLIC CONTROL POINTS (Paper Definition 2 & Section IV.A) *)
+(* LEAKY ASSERTIONS AT PUBLIC CONTROL POINTS                                     *) 
 (* In the paper (Page 33):                                                       *)
 (*   [at l0]: t = T_start /\ [at l_exit]: t = t_prime /\ t' - T < Delta_t => h=0 *)
 (*   [at l0]: t = T_start /\ [at l_exit]: t = t_prime /\ t' - T >= Delta_t => h=1*)

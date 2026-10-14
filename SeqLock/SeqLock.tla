@@ -370,7 +370,7 @@ TypeOK ==
 ReaderTerminated == pc[3] = "Done"
 
 (* ============================================================================= *)
-(* PERSISTENT MEMORY GUARANTEE PREDICATE G (Paper Page 7, 15)                    *)
+(* PERSISTENT MEMORY GUARANTEE PREDICATE G                                       *)
 (* When counter c is even, x2 = 1 if and only if x1 contains high sensitive data *)
 (* ============================================================================= *)
 
@@ -381,7 +381,7 @@ G_Guarantee ==
 (* VALUE-DEPENDENT NON-INTERFERENCE / INFORMATION LEAK CHECK                     *)
 (* Under secure execution, the reader must NEVER return high sensitive data (1) *)
 (* through the low return channel. If it returns 1, the secret leaked!           *)
-(*                                                                               *)
+
 (* Fails when Fixed = FALSE (witnessing the persistent memory information leak). *)
 (* Passes when Fixed = TRUE  (proving flush instructions eliminate the leak).   *)
 (* ============================================================================= *)
