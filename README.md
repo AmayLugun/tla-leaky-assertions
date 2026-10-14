@@ -135,7 +135,7 @@ The table below summarizes the model checking statistics obtained from TLC runs 
 
 > **Note on Transformed and Mitigated Programs:**
 >
-> - In `InternalTimingTransformed`, the branch-padding mitigation successfully eliminates execution-time variance ($\Delta = 9$ across all inputs), resulting in **No** leak found (all non-interference invariants pass).
+> - In `Transformed`, the branch-padding mitigation successfully eliminates execution-time variance ($\Delta = 9$ across all inputs), resulting in **No** leak found (all non-interference invariants pass).
 > - For `WebServiceLeak` and `SeqLock`, the table presents the vulnerable baseline configuration (`Fixed = FALSE`). When the mitigation toggle is engaged (`Fixed = TRUE`), the leak is completely eliminated, and TLC reports 0 violations across all reachable states.
 >
 > For full mathematical formalizations, trace counterexamples, and security proofs, see the [Experimental Evaluation Report](documents/report.pdf) ([LaTeX source](documents/report.tex)).
