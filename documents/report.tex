@@ -56,7 +56,7 @@ Table~\ref{tab:benchmarks} summarizes the model checking statistics obtained fro
 \midrule
 \texttt{ConcurrentLeak}            & 2 & 44  & 5  & 571 & \textbf{Yes} \\
 \texttt{InternalTiming}            & 2 & 20  & 10 & 706 & \textbf{Yes} \\
-\texttt{InternalTimingTransformed} & 2 & 22  & 10 & 586 & \textbf{No}  \\
+\texttt{Transformed} & 2 & 22  & 10 & 586 & \textbf{No}  \\
 \texttt{ModSqLeaks}                & 1 & 322 & 21 & 466 & \textbf{Yes} \\
 \texttt{WebServiceLeak}            & 1 & 17  & 5  & 485 & \textbf{Yes} \\
 \texttt{SeqLock}                   & 3 & 3   & 2  & 729 & \textbf{Yes} \\
@@ -74,7 +74,7 @@ Table~\ref{tab:benchmarks} summarizes the model checking statistics obtained fro
 
 \bigskip
 
-\section{Benchmark Program Writeups}
+\section{Reports on the Programs}
 
 \subsection{ConcurrentLeak (\texttt{ConcurrentLeaks/ConcurrentLeak.tla})}
 
@@ -153,10 +153,10 @@ Evaluated at process termination (\texttt{Observed}):
 
 \bigskip
 
-\subsection{InternalTimingTransformed (\texttt{InternalTimingTransformed/Transformed.tla})}
+\subsection{Transformed (\texttt{InternalTimingTransformed/Transformed.tla})}
 
 \subsubsection{1. How the Program is Leaking Information (Mitigation Analysis)}
-\texttt{InternalTimingTransformed} represents the mitigated countermeasure specification. To eliminate the internal timing covert channel caused by the branch imbalance in Thread 1, source-level \emph{branch padding} is introduced.
+\texttt{Transformed} represents the mitigated countermeasure specification. To eliminate the internal timing covert channel caused by the branch imbalance in Thread 1, source-level \emph{branch padding} is introduced.
 \begin{itemize}
     \item On the shorter path ($h = 0$), an auxiliary padding step is inserted:
     $$\texttt{l4\_pad: await turn = 1; skip; t := t + 1; turn := 2; goto l5;}$$
