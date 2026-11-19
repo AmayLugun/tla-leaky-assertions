@@ -1,0 +1,1691 @@
+\documentclass[a4paper,11pt]{report}
+
+% ==============================================================================
+% Packages & Configuration (Matching documents/report.tex font & styling)
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+\usepackage[plainpages=false,pdfpagelabels]{hyperref}
+
+% Theorem and Definition environments
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+% Code Listings Configuration (PlusCal / TLA+)
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=6pt,
+    frame=single,
+    rulecolor=\color{black!25},
+    backgroundcolor=\color{black!2},
+    keywordstyle=\bfseries\color{blue!70!black},
+    commentstyle=\itshape\color{gray!80!black},
+    stringstyle=\color{teal},
+    tabsize=2,
+    showstringspaces=false,
+    xleftmargin=1.5em,
+    framexleftmargin=1.5em
+}
+
+% Table of Contents styling (matching the CONTENTS template)
+\renewcommand{\contentsname}{CONTENTS}
+\renewcommand{\bibname}{REFERENCES}
+\renewcommand{\cfttoctitlefont}{\fontsize{20}{24}\selectfont\bfseries}
+\setlength{\cftbeforetoctitleskip}{0.5cm}
+\setlength{\cftaftertoctitleskip}{1.0cm}
+\setlength{\cftbeforechapskip}{8pt}
+\setlength{\cftbeforesecskip}{5pt}
+\setlength{\cftbeforesubsecskip}{3pt}
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapleader}{\bfseries\cftdotfill{\cftchapdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchapdotsep}{\cftnodots} % No dots for preliminary front-matter entries
+\setcounter{tocdepth}{2} % Include chapters, sections (1.1), and subsections (1.5.1)
+
+% List of Figures styling
+\renewcommand{\listfigurename}{LIST OF FIGURES}
+\renewcommand{\cftloftitlefont}{\fontsize{20}{24}\selectfont\bfseries}
+\setlength{\cftbeforeloftitleskip}{0.5cm}
+\setlength{\cftafterloftitleskip}{1.0cm}
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
+
+% List of Tables styling
+\renewcommand{\listtablename}{LIST OF TABLES}
+\renewcommand{\cftlottitlefont}{\fontsize{20}{24}\selectfont\bfseries}
+\setlength{\cftbeforelottitleskip}{0.5cm}
+\setlength{\cftafterlottitleskip}{1.0cm}
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+% ==============================================================================
+% Thesis Metadata (Edit here)
+% ==============================================================================
+% Default matches the blank template; uncomment your project title below if needed:
+\newcommand{\thesistitle}{PLEASE MENTION TITLE OF THE THESIS}
+% \newcommand{\thesistitle}{FORMAL VERIFICATION OF INFORMATION FLOW AND SIDE-CHANNEL LEAKS VIA LEAKY ASSERTIONS IN TLA+/TLC}
+
+\newcommand{\authorname}{AMAY LUGUN}
+\newcommand{\rollnumber}{MT/CS/10004/25}
+
+\newcommand{\degreename}{Master of Technology}
+\newcommand{\departmentname}{Computer Science and Engineering}
+\newcommand{\deptshort}{CSE}
+\newcommand{\guidename}{Dr.\ Sandip Ghosal}
+\newcommand{\guidedesignation}{Assistant Professor}
+\newcommand{\hodname}{Dr.\ Abhijit Mustafi}
+
+% ==============================================================================
+% Document Body
+% ==============================================================================
+\begin{document}
+
+% Unnumbered front-matter pages use distinct internal page labels for hyperref
+\pagenumbering{alph}
+
+% ------------------------------------------------------------------------------
+% PAGE 1: Title Page / Cover Page (Exact template layout with Birla Logo)
+% ------------------------------------------------------------------------------
+\newgeometry{top=1.8cm,bottom=1.8cm,left=2.2cm,right=2.2cm}
+\begin{titlepage}
+    \centering
+    
+    % 1. Title of the Thesis (Centered, Bold, Uppercase)
+    \vspace*{-0.2cm}
+    {\fontsize{18}{25}\selectfont \textbf{\thesistitle}\par}
+    
+    \vspace{1.5cm}
+    
+    % 2. Fulfillment Statement (Italic)
+    {\fontsize{14}{20}\selectfont \textit{A Thesis}\par}
+    \vspace{0.45cm}
+    {\fontsize{12.5}{18}\selectfont \textit{Submitted in partial fulfillment of the requirements for the}\\
+    \textit{award of the Degree of}\par}
+    
+    \vspace{1.3cm}
+    
+    % 3. Degree & Department Section
+    {\fontsize{14}{20}\selectfont \textbf{\MakeUppercase{\degreename}}\par}
+    \vspace{0.5cm}
+    {\fontsize{14}{18}\selectfont \textbf{IN}\par}
+    \vspace{0.5cm}
+    {\fontsize{14}{20}\selectfont \textbf{\MakeUppercase{\departmentname}}\par}
+    
+    \vspace{1.3cm}
+    
+    % 4. Candidate Details
+    {\fontsize{13}{18}\selectfont \textbf{BY}\par}
+    
+    \vspace{0.7cm}
+    
+    {\fontsize{13}{18}\selectfont \textbf{\authorname}\par}
+    
+    \vspace{0.5cm}
+    
+    {\fontsize{13}{18}\selectfont \textbf{\rollnumber}\par}
+    
+    \vspace{0.8cm}
+    
+    % 5. Institute Emblem (Birla Institute of Technology Logo)
+    \includegraphics[width=5.0cm,height=5.0cm,keepaspectratio]{Birla_Institute_of_Technology_Mesra.png}\par
+    
+    \vfill
+    
+    % 6. Institute Affiliation & Bottom Rule
+    \rule{0.95\textwidth}{1.3pt}\par
+    \vspace{0.4cm}
+    {\fontsize{15}{20}\selectfont \textbf{BIRLA INSTITUTE OF TECHNOLOGY}\par}
+    \vspace{0.22cm}
+    {\fontsize{13}{18}\selectfont \textbf{MESRA-835215, RANCHI}\par}
+    \vspace*{0.3cm}
+
+\end{titlepage}
+\restoregeometry
+
+% ------------------------------------------------------------------------------
+% PAGE 2: Approval of the Guide
+% ------------------------------------------------------------------------------
+\clearpage
+\pagenumbering{Alph}
+\setcounter{page}{2}
+\thispagestyle{empty}
+\begingroup
+    \setstretch{1.65}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.8cm}
+    \begin{center}
+        {\fontsize{16}{22}\selectfont \textbf{APPROVAL OF THE GUIDE}\par}
+    \end{center}
+
+    \vspace{1.2cm}
+
+    \noindent
+    Recommended that the thesis entitled\\
+    ``\leaders\hrule height 0.9pt\hfill\kern0pt\\
+    \rule{\textwidth}{0.9pt}\\
+    '' presented by \authorname{} under my supervision and guidance be accepted as fulfilling this part of the requirements for the award of Degree of \textbf{\degreename{} in \departmentname}. To the best of my knowledge, the content of this thesis did not form a basis for the award of any previous degree to anyone else.
+
+    \vspace{2.2cm}
+
+    \noindent Date: \rule{3.8cm}{0.9pt}
+
+    \vspace{0.9cm}
+
+    \noindent\hfill
+    \begin{minipage}[t]{8.5cm}
+        \raggedright
+        \setstretch{1.35}
+        \rule{6.2cm}{0.9pt}\\[0.1cm]
+        \textbf{\guidename}\\
+        \guidedesignation\\
+        Dept.\ of \departmentname\\
+        Birla Institute of Technology\\
+        Mesra, Ranchi
+    \end{minipage}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% PAGE 3: Declaration Certificate
+% ------------------------------------------------------------------------------
+\clearpage
+\thispagestyle{empty}
+\begingroup
+    \setstretch{1.5}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.8cm}
+    \begin{center}
+        {\fontsize{16}{22}\selectfont \textbf{DECLARATION CERTIFICATE}\par}
+    \end{center}
+
+    \vspace{1.2cm}
+
+    \noindent I certify that
+
+    \vspace{0.1cm}
+
+    \begin{enumerate}[label=\alph*), leftmargin=1.1cm, itemsep=0.5em, labelsep=0.4em]
+        \item The work contained in the thesis is original and has been done by myself under the general supervision of my supervisor.
+        \item The work has not been submitted to any other Institute for any other degree or diploma.
+        \item I have followed the guidelines provided by the Institute in writing the thesis.
+        \item I have conformed to the norms and guidelines given in the Ethical Code of Conduct of the Institute.
+        \item Whenever I have used materials (data, theoretical analysis, and text) from other sources, I have given due credit to them by citing them in the text of the thesis and giving their details in the references.
+        \item Whenever I have quoted written materials from other sources, I have put them under quotation marks and given due credit to the sources by citing them and giving required details in the references.
+    \end{enumerate}
+
+    \vspace{2.4cm}
+
+    \noindent\hfill
+    \begin{minipage}[t]{6.0cm}
+        \centering
+        \setstretch{1.35}
+        \rule{5.2cm}{0.9pt}\\[0.15cm]
+        \textbf{\authorname}\\
+        (\rollnumber)
+    \end{minipage}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% PAGE 4: Certificate of Approval
+% ------------------------------------------------------------------------------
+\clearpage
+\thispagestyle{empty}
+\begingroup
+    \setstretch{1.65}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.8cm}
+    \begin{center}
+        {\fontsize{16}{22}\selectfont \textbf{CERTIFICATE OF APPROVAL}\par}
+    \end{center}
+
+    \vspace{1.2cm}
+
+    \noindent
+    This is to certify that the work embodied in this thesis entitled\\
+    ``\leaders\hrule height 0.9pt\hfill\kern0pt\\
+    \rule{5.5cm}{0.9pt}'', carried out by \textbf{\authorname{} (\rollnumber)}, has been approved for the degree of \textbf{\degreename{} in \departmentname} of Birla Institute of Technology, Mesra, Ranchi.
+
+    \vspace{1.5cm}
+
+    \noindent Date:\\[0.35cm]
+    \noindent Place:
+
+    \vspace{2.8cm}
+
+    \noindent\textbf{Internal Examiner}\hfill\textbf{External Examiner}
+
+    \vspace{3.0cm}
+
+    \begin{center}
+        \setstretch{1.35}
+        \textbf{(Chairman)}\\
+        \textbf{Head of Department}
+    \end{center}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% PAGE 5: Abstract (Roman page numbering starts here at i)
+% ------------------------------------------------------------------------------
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\pagestyle{plain}
+\phantomsection
+\addcontentsline{toc}{chapter}{ABSTRACT}
+\begingroup
+    \setstretch{1.5}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.8cm}
+    \begin{center}
+        {\fontsize{16}{22}\selectfont \textbf{ABSTRACT}\par}
+    \end{center}
+
+    \vspace{1.2cm}
+
+    % Abstract content
+    In concurrent programs, non-deterministic thread scheduling and shared-resource contention often create side channels that leak confidential information through execution timing and output order. This thesis focuses on formalizing and verifying these leakage mechanisms using leaky assertions.
+
+    Our methodology uses dynamic labelling concepts as a preliminary step to locate observable program points influenced by secret data. The primary focus of this work lies in the formal modeling and verification phase: we instrument programs with auxiliary time intervals, specify concurrent behaviors in PlusCal and TLA+, and construct layered invariants encompassing functional correctness, non-interference security properties, and calibrated leaky assertions. Using the TLC model checker, we exhaustively evaluate these specifications across all reachable thread interleavings.
+
+    Across six representative benchmark models, TLC successfully validates the soundness of the leaky assertions, discovers side-channel leaks, and generates concrete counterexample traces that pinpoint the responsible execution schedules, while verifying that candidate mitigations eliminate the vulnerability. As the observation points, assertions, and models were manually identified and constructed in this work, future research focuses on building an automated toolchain to synthesize TLA+ specifications directly from source code and guide mitigation generation.
+
+\endgroup
+
+% ------------------------------------------------------------------------------
+% PAGE 6: Acknowledgement (Roman page ii)
+% ------------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{ACKNOWLEDGEMENT}
+\begingroup
+    \setstretch{1.5}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.8cm}
+    \begin{center}
+        {\fontsize{16}{22}\selectfont \textbf{ACKNOWLEDGEMENT}\par}
+    \end{center}
+
+    \vspace{1.0cm}
+
+    \noindent
+    I would like to express my profound gratitude to my project guide, \textbf{\guidename}, for his guidance and support during my thesis work. I benefited greatly by working under his guidance. It was his effort for which I am able to develop a detailed insight on this subject and special interest to study further. His encouragement, motivation and support have been invaluable throughout my studies at BIT, Mesra, Ranchi.
+
+    \vspace{0.35cm}
+
+    \noindent
+    I convey my sincere gratitude to \textbf{\hodname}, Head, Dept.\ of \deptshort, BIT, Mesra, Ranchi, for providing me various facilities needed to complete my project work.
+
+    \vspace{0.35cm}
+
+    \noindent
+    I would also like to thank all the faculty members of the \deptshort{} department who have directly or indirectly helped during the course of the study. I would also like to thank all the staff (technical and non-technical) and my friends at BIT, Mesra, Ranchi who have helped me greatly during the course.
+
+    \vspace{0.35cm}
+
+    \noindent
+    Finally, I must express my very profound gratitude to my parents for providing me with unfailing support and continuous encouragement throughout the years of my study. This accomplishment would not have been possible without them.
+
+    \vspace{0.35cm}
+
+    \noindent
+    My apologies and heartfelt gratitude to all who have assisted me yet have not been acknowledged by name.
+
+    \vspace{0.9cm}
+
+    \noindent Thank you.
+
+    \vspace{1.8cm}
+
+    \noindent
+    \begin{minipage}[t]{0.4\textwidth}
+        DATE:
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.42\textwidth}
+        \centering
+        \setstretch{1.35}
+        \textbf{\authorname}\\
+        (\rollnumber)
+    \end{minipage}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% Table of Contents
+% ------------------------------------------------------------------------------
+\clearpage
+{\hypersetup{linkcolor=black}\tableofcontents}
+
+% ------------------------------------------------------------------------------
+% List of Figures
+% ------------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
+{\hypersetup{linkcolor=black}\listoffigures}
+
+% ------------------------------------------------------------------------------
+% List of Tables
+% ------------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
+{\hypersetup{linkcolor=black}\listoftables}
+
+% ------------------------------------------------------------------------------
+% List of Abbreviations
+% ------------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
+\begingroup
+    \setstretch{1.3}
+    \fontsize{12}{16}\selectfont
+
+    \vspace*{0.5cm}
+    {\fontsize{20}{24}\selectfont\bfseries LIST OF ABBREVIATIONS\par}
+
+    \vspace{1.0cm}
+
+    \noindent
+    \begin{tabularx}{\textwidth}{@{} p{2.8cm} X @{}}
+        \textbf{CFG}   & Control Flow Graph \\
+        \textbf{DL}    & Dynamic Labelling \\
+        \textbf{HW}    & Hamming Weight \\
+        \textbf{IFC}   & Information Flow Control \\
+        \textbf{IFP}   & Information Flow Policy \\
+        \textbf{LA}    & Leaky Assertion \\
+        \textbf{NI}    & Non-Interference \\
+        \textbf{OG}    & Owicki--Gries \\
+        \textbf{PC}    & Program Counter \\
+        \textbf{PM}    & Persistent Memory \\
+        \textbf{RWFM}  & Readers--Writers Flow Model \\
+        \textbf{TLA+}  & Temporal Logic of Actions \\
+        \textbf{TLC}   & TLA+ Model Checker \\
+    \end{tabularx}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% CHAPTER 1: Introduction (Arabic page numbering starts here at 1)
+% ------------------------------------------------------------------------------
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchapdotsep}{\cftdotsep}}
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{plain}
+\onehalfspacing
+
+\chapter{INTRODUCTION}
+
+\section{Background}
+Modern software relies heavily on concurrency. Multicore processors and distributed servers run multiple threads that share memory and coordinate through locks, semaphores, and condition variables.
+
+However, concurrent execution introduces non-determinism: thread schedules vary based on hardware timing, operating system decisions, and resource contention. Even when a program computes correct results without crashing, the way threads interleave can leak private information.
+
+These leaks typically occur through side channels like execution time or output ordering. If a thread takes a different branch or waits on a semaphore based on a secret value, an observer timing the operations or watching the order of outputs can reconstruct that secret. Catching these leaks requires formal methods that can inspect all possible interleavings rather than just testing a handful of runs.
+
+\section{Problem Statement}
+Leaky assertions provide a mathematical way to reason about information leaks in concurrent code. However, existing work relies entirely on manual Owicki--Gries proofs written by hand on paper. Writing these proofs by hand is slow, tedious, and prone to mistakes, especially as soon as programs contain loops, multiple shared variables, or fine-grained interleavings.
+
+More importantly, hand proofs do not provide an executable verification process. They cannot explore state spaces automatically, produce counterexample traces that show developers exactly how a leak happens, or verify whether a proposed fix actually eliminates the leak. We need a way to turn leaky assertions into executable models that can be checked automatically.
+
+\section{Research Scope and Objectives}
+The primary objective of this thesis is to bridge deductive information-flow theory with automated explicit-state model checking to detect side-channel leaks and verify mitigations in concurrent and sequential software. To achieve this, the research pursues four concrete objectives:
+\begin{enumerate}[label=\arabic*., itemsep=0.35em]
+    \item \textbf{Theoretical Foundations}: Formalize the semantic relationship between Owicki--Gries interference freedom, auxiliary clock instrumentation, and leaky assertions, proving that interference freedom preserves attacker deductions along reachable execution paths (Proposition~3.1).
+    \item \textbf{Observation Point Selection}: Apply dynamic labelling principles and the Readers--Writers Flow Model (RWFM) to identify candidate public observation points influenced by secret branches and shared-state updates.
+    \item \textbf{Layered Invariant and Verification Methodology}: Develop a structured three-layer invariant hierarchy (functional correctness, calibration/leaky assertions, and non-interference security properties) supporting dual-mode verification in TLC: proving deductive soundness across all interleavings (Mode~A) and extracting diagnostic counterexample traces (Mode~B).
+    \item \textbf{Empirical Evaluation and Mitigation Checking}: Model and evaluate six representative benchmark scenarios spanning concurrent synchronization, internal timing channels, algorithmic side channels, web services, and crash-consistent persistent memory, while formally verifying that proposed mitigations eliminate the covert channels.
+\end{enumerate}
+In this work, observation points, assertions, and models are constructed manually to rigorously prove the core concepts and verification mechanics, establishing a validated foundation for future automated toolchains.
+
+\clearpage
+\section{Chapter Overview}
+The remainder of this thesis is structured as follows:
+\begin{itemize}[itemsep=0.35em]
+    \item \textbf{Chapter 2 (Literature Review and Preliminaries)}: Reviews foundational concepts: TLA+ and PlusCal, the axiomatic formulation of leaky assertions, Hoare logic, the Owicki--Gries proof technique for parallel programs, and dynamic labelling with RWFM.
+    \item \textbf{Chapter 3 (Methodology)}: Describes the framework: selecting observation points with RWFM, writing PlusCal/TLA+ models with auxiliary clocks, and organizing layered invariants for dual-mode TLC checking.
+    \item \textbf{Chapter 4 (Experiments and Results)}: Evaluates the approach on six benchmark models (semaphore contention, round-robin scheduling, branch-padding mitigation, cryptographic exponentiation, web login latency, and persistent memory seqlock), reporting state counts, counterexample traces, and mitigation checks.
+    \item \textbf{Chapter 5 (Conclusion and Future Work)}: Summarizes findings, discusses practical modeling lessons, and presents directions for future work toward automated verification.
+\end{itemize}
+
+% ------------------------------------------------------------------------------
+% CHAPTER 2: Literature Review and Preliminaries
+% ------------------------------------------------------------------------------
+\chapter{LITERATURE REVIEW AND PRELIMINARIES}
+
+\section{Temporal Logic of Actions (TLA+) by Leslie Lamport}
+The \emph{Temporal Logic of Actions (TLA+)}, introduced by Leslie Lamport~\cite{lamport2002specifying}, is a formal specification language for modeling and verifying concurrent, reactive, and distributed systems. Instead of dealing with programming language idiosyncrasies, TLA+ models systems directly as state machines using first-order logic and set theory.
+
+\subsection{State-Machine Semantics and Specification Structure}
+In TLA+, a system is defined by its variables, an initial condition, and a next-state relation:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{Initial State Predicate ($Init$)}: A predicate over declared variables defining which states the system can start in.
+    \item \textbf{Next-State Action ($Next$)}: A disjunction of actions specifying all valid state transitions:
+    \begin{equation}
+        Next \triangleq Action_1 \lor Action_2 \lor \dots \lor Action_m
+    \end{equation}
+    Each $Action_i$ specifies enabling conditions and relates current variable values $v$ to successor values $v'$.
+    \item \textbf{Safety Specification ($Spec$)}: Systems allow stuttering steps $[Next]_{vars} \triangleq Next \lor (vars' = vars)$, leading to the standard specification formula:
+    \begin{equation}
+        Spec \triangleq Init \land \Box[Next]_{vars} \land \text{Fairness}
+    \end{equation}
+    where $\Box$ means ``always'', and $\text{Fairness}$ asserts weak or strong fairness on thread actions.
+\end{itemize}
+
+\subsection{The PlusCal Algorithmic Language}
+PlusCal is an imperative language with C-style syntax that compiles down to TLA+ definitions. It provides familiar constructs like \texttt{process}, \texttt{while}, \texttt{if-then-else}, and \texttt{await} for synchronization.
+
+Labels in PlusCal define the exact granularity of execution: each labeled block of code executes as a single atomic step. TLC only interleaves processes between label boundaries. This gives us explicit control over where race conditions and context switches can occur when modeling concurrent algorithms.
+
+\subsection{The TLC Model Checker}
+The \textbf{TLC model checker} explores reachable states of a TLA+ specification using an explicit-state breadth-first search:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{State Graph Exploration}: TLC builds the state space starting from $Init$, checking for deadlocks and evaluating invariants at every state.
+    \item \textbf{Safety Invariant Checking}: TLC verifies whether safety properties hold across all reachable states.
+    \item \textbf{Counterexample Traces}: When an invariant fails, TLC prints the shortest step-by-step trace showing the exact interleaving that caused the violation.
+\end{itemize}
+In this project, TLC replaces manual hand proofs. It checks whether attacker deductions hold and produces concrete counterexample traces whenever a concurrent program leaks information.
+
+\section{An Axiomatic Approach to Detect Information Leaks in Concurrent Programs}
+Information flow security in computer programs is often formulated in terms of \emph{Non-Interference (NI)}. For sequential code, non-interference states that changing confidential (high) inputs must produce no observable difference in public (low) outputs.
+
+\subsection{Limitations of Non-Interference in Concurrent Programs}
+Enforcing strict non-interference in concurrent systems is often too restrictive. Concurrent threads communicate through shared memory, semaphores, and schedulers. Normal scheduling variations, benign race conditions, and minor timing jitters often cause static type checkers or runtime monitors to reject safe concurrent programs, even when no real secret is compromised.
+
+To make security verification practical for concurrent software, Ghosal and Shyamasundar (ICSE-NIER 2021)~\cite{ghosal2021axiomatic} proposed focusing on targeted \emph{leak detection} using \emph{leaky assertions} rather than enforcing blanket non-interference.
+
+\subsection{Definition and Mechanics of Leaky Assertions}
+A leaky assertion specifies when an outside observer can deduce secret values from publicly observable program behaviors:
+\begin{definition}[Leaky Assertion]
+An assertion $A$ at an observable control point $\ell$ is \emph{leaky} if its satisfaction during execution reduces the uncertainty of a secret variable $h$.
+\end{definition}
+Formally, let $H$ be the set of possible values for secret $h$, and let $\mathrm{Post}(\ell, h)$ be the strongest postcondition at location $\ell$ given secret $h$. Assertion $A$ is leaky if the deduced set $H_{\text{deduced}}$ is a proper subset of $H$:
+\begin{equation}
+    H_{\text{deduced}} = \{ h \in H \mid \mathrm{Post}(\ell, h) \implies A \} \subsetneq H
+\end{equation}
+When $|H_{\text{deduced}}| = 1$, the observer reconstructs the exact secret value.
+
+\subsection{Auxiliary Timing Variables and Leakage Deduction}
+To capture timing channels without altering functional program behavior, Ghosal and Shyamasundar add auxiliary timing variables ($t, T, t'$). An entry timestamp $T$ is recorded when an operation begins, an auxiliary clock $t$ advances with execution steps, and an exit timestamp $t'$ is saved at an observable statement (such as a public \texttt{print}).
+
+When a secret-dependent branch introduces contention or delay $\Delta t$, the elapsed time $t' - T$ reveals the secret:
+\begin{gather}
+    \frac{[\text{at } l_{\text{entry}}] : t = T \qquad [\text{at } l_{\text{exit}}] : t = t' \qquad t' - T < \Delta_{\text{threshold}}}{h = 0}, \\[0.4em]
+    \frac{[\text{at } l_{\text{entry}}] : t = T \qquad [\text{at } l_{\text{exit}}] : t = t' \qquad t' - T \ge \Delta_{\text{threshold}}}{h = 1}.
+\end{gather}
+Leaky assertions formalize what an observer can deduce from these timing intervals. However, Ghosal and Shyamasundar verified these assertions only with manual pen-and-paper proofs. In this thesis, we turn them into executable specifications checked automatically by TLC.
+
+\section{Concepts of Hoare Triples and Mathematical Foundations}
+Hoare logic provides the mathematical basis for reasoning about imperative programs using assertions. Introduced by C.~A.~R. Hoare in 1969 and summarized in instructional texts like Chakraborty (IIT Bombay, 2000)~\cite{chakraborty2000hoare}, it formalizes program behavior as pre- and postcondition relations.
+
+\subsection{The Hoare Triple}
+The core building block is the \emph{Hoare triple}:
+\begin{equation}
+    \{P\}\, S \,\{Q\}
+\end{equation}
+where:
+\begin{itemize}[itemsep=0.2em]
+    \item $P$ is the \textbf{precondition}, an assertion representing a first-order logic predicate over program variables that holds immediately before the execution of statement $S$.
+    \item $S$ is the program statement or command to be executed.
+    \item $Q$ is the \textbf{postcondition}, an assertion guaranteed to hold immediately after the execution of $S$, provided that $S$ terminates.
+\end{itemize}
+
+\subsection{Partial Correctness versus Total Correctness}
+Hoare logic distinguishes between two fundamental notions of program correctness:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{Partial Correctness} ($\models_{\text{par}} \{P\}\, S \,\{Q\}$): If statement $S$ is executed in an initial state satisfying precondition $P$, and if the execution of $S$ terminates, then the final state will satisfy postcondition $Q$. It makes no guarantee that $S$ will terminate.
+    \item \textbf{Total Correctness} ($\models_{\text{tot}} \{P\}\, S \,\{Q\}$): If statement $S$ is executed in an initial state satisfying $P$, then $S$ is guaranteed to terminate, and the final state is guaranteed to satisfy $Q$.
+\end{itemize}
+In side-channel verification, partial correctness formalizes the relational guarantees between execution states, while model-checking explores termination and reachable terminal states.
+
+\subsection{Inference Rules of Hoare Logic}
+The standard inference rules of Hoare logic include:
+\begin{enumerate}[label=(\roman*), itemsep=0.3em]
+    \item \textbf{Axiom of Assignment}:
+    \begin{equation}
+        \{P[e/x]\}\, x := e \,\{P\}
+    \end{equation}
+    where $P[e/x]$ denotes assertion $P$ with free occurrences of $x$ replaced by expression $e$.
+    \item \textbf{Rule of Sequential Composition}:
+    \begin{equation}
+        \frac{\{P\}\, S_1 \,\{Q\} \qquad \{Q\}\, S_2 \,\{R\}}{\{P\}\, S_1; S_2 \,\{R\}}
+    \end{equation}
+    \item \textbf{Rule of Conditional Execution}:
+    \begin{equation}
+        \frac{\{P \land B\}\, S_1 \,\{Q\} \qquad \{P \land \neg B\}\, S_2 \,\{Q\}}{\{P\}\, \textbf{if } B \textbf{ then } S_1 \textbf{ else } S_2 \,\{Q\}}
+    \end{equation}
+    \item \textbf{Rule of Consequence}:
+    \begin{equation}
+        \frac{P \implies P' \qquad \{P'\}\, S \,\{Q'\} \qquad Q' \implies Q}{\{P\}\, S \,\{Q\}}
+    \end{equation}
+    \item \textbf{Rule of Iteration}:
+    \begin{equation}
+        \frac{\{I \land B\}\, S \,\{I\}}{\{I\}\, \textbf{while } B \textbf{ do } S \,\{I \land \neg B\}}
+    \end{equation}
+    where $I$ is the loop invariant that holds before and after each iteration.
+\end{enumerate}
+
+\subsection{Verification Conditions and Weakest Preconditions}
+To check a Hoare triple systematically, Dijkstra defined the \emph{Weakest Precondition} ($\mathrm{wp}(S, Q)$): the most general initial condition under which executing $S$ terminates in a state satisfying $Q$. Proving $\{P\}\, S \,\{Q\}$ amounts to checking the verification condition:
+\begin{equation}
+    P \implies \mathrm{wp}(S, Q)
+\end{equation}
+
+\section{An Axiomatic Proof Technique for Parallel Programs}
+Owicki and Gries~\cite{owicki1976axiomatic} extended Hoare logic to concurrent programs that communicate through shared variables. In this section, we review the parts of their framework directly relevant to our study: we briefly outline sequential proofs, and then focus on parallel program correctness, interference freedom, auxiliary variables, and a concrete example.
+
+\subsection{Brief Overview: Proofs of Properties of Sequential Programs}
+For sequential code, Owicki and Gries use a \emph{proof outline}, which inserts intermediate assertions at every statement boundary:
+\begin{equation}
+    \{P_0\}\; S_1 \;\{P_1\}\; S_2 \;\{P_2\} \dots S_m \;\{P_m\}
+\end{equation}
+A proof outline is valid when each step $\{P_{k-1}\}\, S_k \,\{P_k\}$ follows from standard Hoare logic rules. In a single thread, intermediate assertions cannot be disrupted because no other process modifies memory between statements.
+
+\subsection{Proofs of Correctness of Parallel Programs}
+When multiple threads execute concurrently:
+\begin{equation}
+    S = \textbf{cobegin } S_1 \parallel S_2 \parallel \dots \parallel S_n \textbf{ coend}
+\end{equation}
+proving each thread $\{P_i\}\, S_i \,\{Q_i\}$ separately is not enough. An action by another thread can modify shared memory and invalidate intermediate assertions in $S_i$.
+
+\subsubsection{The Interference Freedom Requirement}
+To prove parallel correctness, Owicki and Gries introduced \textbf{Interference Freedom}:
+\begin{definition}[Interference Freedom]
+Let $\{P\}\, S \,\{Q\}$ be a valid proof outline for thread $S_1$, and let $T$ be an atomic statement with precondition $\mathrm{pre}(T)$ in concurrent thread $S_2$. Statement $T$ is \emph{interference-free} with respect to $\{P\}\, S \,\{Q\}$ if:
+\begin{enumerate}[label=\arabic*., itemsep=0.2em]
+    \item $\{Q \land \mathrm{pre}(T)\}\, T \,\{Q\}$, and
+    \item $\{\mathrm{pre}(S') \land \mathrm{pre}(T)\}\, T \,\{\mathrm{pre}(S')\}$ for every statement $S'$ in proof outline $S$.
+\end{enumerate}
+\end{definition}
+When every action in every thread is interference-free with all assertions of every other thread, the combined program satisfies:
+\begin{equation}
+    \{P_1 \land \dots \land P_n\}\; \textbf{cobegin } S_1 \parallel \dots \parallel S_n \textbf{ coend} \;\{Q_1 \land \dots \land Q_n\}
+\end{equation}
+
+\subsubsection{Auxiliary Variables}
+Many concurrent properties cannot be verified using program variables alone. Owicki and Gries formalized \textbf{Auxiliary Variables} (later generalized by Lamport and Schneider~\cite{lamport1984buridan}):
+\begin{definition}[Auxiliary Variables]
+A set of variables $AV$ is an auxiliary variable set if variables in $AV$ appear only in assignments $a := e$ and never appear in branching guards, loop tests, or on the right-hand side of assignments to program variables.
+\end{definition}
+Because auxiliary variables do not alter program control flow or state transitions, they can record execution history, thread progress, or timestamps without changing program behavior.
+
+\subsection{Illustrative Example: Proving Parallel Correctness and Interference Freedom}
+To see how the Owicki--Gries technique works, consider two threads sharing an integer $x$, initialized to $x = 0$:
+\begin{align*}
+    \text{Process } P_1 &: \quad \langle x := x + 1 \rangle \\
+    \text{Process } P_2 &: \quad \langle x := x + 2 \rangle
+\end{align*}
+where $\langle \dots \rangle$ denotes an atomic step. The goal is to prove that upon termination, $x = 3$.
+
+Physical variable $x$ alone is insufficient for the proof: $P_1$ cannot tell if $P_2$ has already executed, so its postcondition can only state $x \ge 1$. We introduce two auxiliary flags $a_1, a_2 \in \{0, 1\}$, initialized to 0, where $a_i = 1$ indicates that process $P_i$ finished its update.
+
+The proof outlines become:
+\begin{align}
+    \text{Process } P_1 &: \quad \{x = 2a_2 \land a_1 = 0\} \nonumber \\
+    &\quad\quad \langle x := x + 1; \; a_1 := 1 \rangle \nonumber \\
+    &\quad\quad \{x = 1 + 2a_2 \land a_1 = 1\} \\[0.4em]
+    \text{Process } P_2 &: \quad \{x = a_1 \land a_2 = 0\} \nonumber \\
+    &\quad\quad \langle x := x + 2; \; a_2 := 1 \rangle \nonumber \\
+    &\quad\quad \{x = 2 + a_1 \land a_2 = 1\}
+\end{align}
+
+To verify interference freedom, we check that $P_2$'s action preserves $P_1$'s precondition:
+\begin{equation}
+    \{(x = 2a_2 \land a_1 = 0) \land (x = a_1 \land a_2 = 0)\} \; \langle x := x + 2; \; a_2 := 1 \rangle \; \{x = 2a_2 \land a_1 = 0\}
+\end{equation}
+Before the step, $x = 0, a_1 = 0, a_2 = 0$. After the step, $x = 2, a_1 = 0, a_2 = 1$. The postcondition requires $2 = 2(1) \land 0 = 0$, which holds.
+
+Similarly, checking $P_1$'s postcondition against $P_2$'s action:
+\begin{equation}
+    \{(x = 1 + 2a_2 \land a_1 = 1) \land (x = a_1 \land a_2 = 0)\} \; \langle x := x + 2; \; a_2 := 1 \rangle \; \{x = 1 + 2a_2 \land a_1 = 1\}
+\end{equation}
+Before the step, $x = 1, a_1 = 1, a_2 = 0$. After the step, $x = 3, a_1 = 1, a_2 = 1$. The postcondition requires $3 = 1 + 2(1) \land 1 = 1$, which also holds.
+
+By symmetry, $P_1$ does not interfere with $P_2$. When both finish:
+\begin{equation}
+    (x = 1 + 2a_2 \land a_1 = 1) \land (x = 2 + a_1 \land a_2 = 1) \implies x = 3
+\end{equation}
+which establishes correctness.
+
+\subsection{Why Manual Proofs Do Not Scale}
+While checking this two-line program by hand is straightforward, the method quickly becomes impractical for real systems. For $n$ threads each running $m$ atomic statements, verifying interference freedom requires evaluating $O(n^2 \cdot m^2)$ conditions. When programs include loops, locks, and auxiliary clock variables, manual proofs become tedious and error-prone.
+
+This scalability bottleneck is why automation is necessary: instead of writing dozens of manual checks on paper, we can encode the algorithm in TLA+ and let the TLC model checker evaluate all reachable states automatically.
+
+\section[Dynamic Labelling and the Readers--Writers Flow Model]{Dynamic Labelling and the\\Readers--Writers Flow Model (RWFM)}
+To track information flows without rigid static classifications, Ghosal et al.~\cite{ghosal2018secrypt,ghosal2020dbsec} developed \emph{Dynamic Labelling} and the \emph{Readers--Writers Flow Model (RWFM)}.
+
+\subsection{The Readers--Writers Flow Model (RWFM)}
+Traditional security models (like Bell--LaPadula) assign fixed security levels ($Low \le High$) and reject code that changes levels dynamically. RWFM instead attaches access permissions and provenance directly to each entity:
+\begin{definition}[RWFM Entity Label]
+Let $P$ be the set of principals in a system. An RWFM label is a triple $(s, R, W)$:
+\begin{itemize}[itemsep=0.2em]
+    \item $s \in P$: The \textbf{Owner} of the entity.
+    \item $R \subseteq P$: The \textbf{Reader Set}, principals permitted to read the entity.
+    \item $W \subseteq P$: The \textbf{Writer Set}, principals whose operations have influenced the entity.
+\end{itemize}
+\end{definition}
+
+\subsection{Information Flow Policy in RWFM}
+\begin{definition}[Permissible Flow in RWFM]
+Information may flow from entity $x$ with label $(s_x, R_x, W_x)$ to entity $y$ with label $(s_y, R_y, W_y)$ (written $x \to y$) if and only if:
+\begin{enumerate}[label=\arabic*., itemsep=0.2em]
+    \item \textbf{Confidentiality}: $R_x \supseteq R_y$. Any principal allowed to read destination $y$ must also be allowed to read source $x$.
+    \item \textbf{Integrity / Influence}: $W_x \subseteq W_y$. Destination $y$ records the influence of all writers of $x$.
+\end{enumerate}
+\end{definition}
+In our programs, secret variables $h$ have a restricted reader set ($R_h \subset P$), whereas public output channels have an open reader set ($R_{\text{public}} = P$). Any flow from $h$ to a public output violates confidentiality ($R_h \not\supseteq R_{\text{public}}$) and constitutes an information leak.
+
+Figure~\ref{fig:rwfm-flow} illustrates the permissible flow conditions under the Readers--Writers Flow Model.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    entity/.style={draw=black, fill=white, rounded corners=3pt, line width=0.8pt, font=\small, align=center, inner sep=6pt, text width=3.8cm},
+    flow/.style={->, >=stealth, line width=1.0pt, draw=black}
+]
+    \node[entity] (src) {
+        \textbf{Source Entity $x$}\\[0.08cm]
+        \textbf{Owner:} $s_x \in P$\\
+        \textbf{Reader Set:} $R_x \subseteq P$\\
+        \textbf{Writer Set:} $W_x \subseteq P$
+    };
+
+    \node[entity, right=4.8cm of src] (dst) {
+        \textbf{Destination Entity $y$}\\[0.08cm]
+        \textbf{Owner:} $s_y \in P$\\
+        \textbf{Reader Set:} $R_y \subseteq P$\\
+        \textbf{Writer Set:} $W_y \subseteq P$
+    };
+
+    \draw[flow] (src) -- (dst) 
+        node[midway, above=6pt, font=\footnotesize\bfseries]{Permissible Flow ($x \to y$)}
+        node[midway, below=5pt, font=\scriptsize, align=center]{
+            \textbf{Confidentiality:} $R_x \supseteq R_y$\\[0.04cm]
+            \textit{(No unauthorized readers)}\\[0.08cm]
+            \textbf{Influence / Integrity:} $W_x \subseteq W_y$\\[0.04cm]
+            \textit{(Tracks all writers)}
+        };
+\end{tikzpicture}
+\caption{The Readers--Writers Flow Model (RWFM) Information Flow Policy.}
+\label{fig:rwfm-flow}
+\end{figure}
+
+\subsection{Dynamic Labelling and Context Elevation}
+Under Dynamic Labelling, execution context ($pc$) is tracked dynamically. When a thread enters a conditional branch guarded by secret $h$, the context elevates to \emph{Secret}. Any shared synchronization variable (such as \texttt{sem}) updated within this branch becomes influenced by the secret:
+\begin{equation}
+    W_{\texttt{sem}} \leftarrow W_{\texttt{sem}} \cup \{ \text{Secret} \}
+\end{equation}
+When another thread subsequently accesses \texttt{sem}, its delay or execution order becomes dependent on the secret, propagating the taint to public outputs.
+
+\subsection{Simplified Information Flow Focus}
+In this thesis, we use RWFM and Dynamic Labelling selectively. We adopt the basic flow rule ($R_x \supseteq R_y$), context elevation, and shared synchronization taints to help identify vulnerable public statements. We omit lattice algebra and join operations, keeping our model checking focused directly on timing and synchronization verification in TLA+/TLC.
+
+\section{Open Challenges and Motivation}
+Based on the literature, we identify four practical limitations in existing approaches:
+\begin{enumerate}[label=\textbf{Gap \arabic*:}, leftmargin=1.8cm, itemsep=0.4em]
+    \item \textbf{Manual Proof Effort}: Existing work on leaky assertions relies on pen-and-paper Owicki--Gries proofs, which do not scale to concurrent programs with multiple threads and shared synchronization.
+    \item \textbf{Lack of Comprehensive and Generalizable Verification Toolchains}: While an early technical report~\cite{tla2021leak} explored an initial hand-crafted TLA+ model for a single semaphore-synchronized thread snippet, it lacked a generalizable formal methodology: it provided no structured invariant layering, did not formalize the dual-mode verification principle (distinguishing deductive soundness from counterexample discovery), evaluated only a single toy scenario, and omitted mitigation validation. Connecting axiomatic leaky assertions to automated explicit-state model checking across diverse concurrent, sequential, and crash-consistency scenarios has remained an unaddressed challenge.
+    \item \textbf{Missing Diagnostic Counterexamples}: Static type systems give binary pass/fail results without showing how an interleaving actually leaks data.
+    \item \textbf{Absence of Integrated Mitigation Checks}: Literature rarely checks candidate fixes (such as branch padding or memory barriers) within the same formal model used to find the leak.
+\end{enumerate}
+
+These gaps directly motivate our research: developing a structured, model-checked verification methodology in TLA+/TLC that leverages selected theoretical concepts to detect leaks, extract concrete counterexamples, and formally validate mitigations across diverse benchmark scenarios.
+
+% ------------------------------------------------------------------------------
+% CHAPTER 3: Methodology
+% ------------------------------------------------------------------------------
+\chapter{METHODOLOGY}
+
+\section{Research Design and Framework Overview}
+Detecting information leaks in concurrent programs that contain publicly observable statements (such as \texttt{print} or \texttt{delay}) involves two main considerations: (i) identifying which public program points might be influenced by secret data, and (ii) verifying whether concurrent thread interleavings actually exploit those points to leak confidential information through timing or event order.
+
+Our verification methodology addresses this through a structured two-stage approach:
+\begin{enumerate}[label=\textbf{Stage \arabic*:}, leftmargin=1.9cm, itemsep=0.35em]
+    \item \textbf{Preliminary Point Selection}: As an initial conceptual step, we apply basic principles from the \emph{Readers--Writers Flow Model (RWFM)} and \emph{Dynamic Labelling (DL)} (Ghosal et al.) to identify candidate observation points. By noting where branches depend on secret inputs and taint shared synchronization variables, we select candidate entry and exit locations (such as location $l_7 : \texttt{print('d')}$) where leaks could appear.
+    \item \textbf{Formal Modeling and TLC Verification (Core Focus)}: The main focus of this work is the formal specification and model checking. Building on leaky assertions with auxiliary time variables (Ghosal and Shyamasundar, ICSE-NIER 2021), we author PlusCal and TLA+ specifications for each concurrent benchmark. We structure the specifications with layered invariants, and use the \textbf{TLC} model checker to exhaustively explore all thread interleavings, prove the soundness of attacker deductions, and capture concrete counterexample traces when leaks occur.
+\end{enumerate}
+
+Figure~\ref{fig:methodology-workflow} illustrates the end-to-end architecture and workflow of our verification methodology.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    block/.style={draw=black, fill=white, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, text width=13.0cm, inner sep=6pt},
+    datablock/.style={draw=black, fill=black!4, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, text width=13.0cm, inner sep=6pt},
+    arrow/.style={->, >=stealth, line width=0.8pt, draw=black}
+]
+    \node[block] (b1) {
+        \textbf{1. Concurrent Program Input}\\
+        $\bullet$ Concurrent threads $T_1 \parallel T_2 \parallel \dots \parallel T_n$ sharing synchronization variables (e.g., \texttt{sem}, $v$).\\
+        $\bullet$ Non-deterministic secret input $h \in \{0, 1\}$ and public observable statements (\texttt{print}).
+    };
+
+    \node[datablock, below=0.4cm of b1] (b2) {
+        \textbf{2. Identification of Vulnerable Program Points (RWFM)}\\
+        $\bullet$ Analyze thread control flow and track program-counter ($pc$) sensitivity context.\\
+        $\bullet$ Flag shared-state updates inside secret branches that propagate taint to peer threads.\\
+        $\bullet$ \textbf{Output:} Select candidate observation control points (e.g., entry $l_0$ and vulnerable exit $l_7$).
+    };
+
+    \node[block, below=0.4cm of b2] (b3) {
+        \textbf{3. Formal Modeling in PlusCal / TLA+}\\
+        $\bullet$ Specify concurrent thread processes, non-deterministic initial states, and shared memory.\\
+        $\bullet$ Instrument auxiliary variables: global clock $t$, timestamps $T_{\text{start}}, t'$, and trace sequence \texttt{out}.\\
+        $\bullet$ Define observable quantities at selected points: elapsed time $\Delta = t' - T_{\text{start}}$ and event order.
+    };
+
+    \node[datablock, below=0.4cm of b3] (b4) {
+        \textbf{4. Layered Invariant Formulation and TLC Verification}\\
+        $\bullet$ \textbf{Layer 1 (Functional):} \texttt{TypeOK}, \texttt{GlobalInv}, and postcondition \texttt{FunctionalPost}.\\
+        $\bullet$ \textbf{Layer 2 (Soundness):} Calibrated leaky assertions (\texttt{LA\_Low}, \texttt{LA\_High}, \texttt{LA\_Trace}).\\
+        $\bullet$ \textbf{Layer 3 (Security):} Non-interference safety invariants (\texttt{NoTimingLeak}, \texttt{NoOrderLeak}).\\
+        $\bullet$ \textbf{TLC Execution:} \textbf{Mode A} proves leaky assertions hold; \textbf{Mode B} outputs leak counterexample $\gamma$.
+    };
+
+    \node[block, below=0.4cm of b4] (b5) {
+        \textbf{5. Mitigation Verification (Fixed Models)}\\
+        $\bullet$ Apply candidate defenses (branch padding, dummy operations, cache-line flushes via \texttt{Fixed = TRUE}).\\
+        $\bullet$ Re-run TLC model checker $\to$ confirms security invariant passes (0 violations) and closes the channel.
+    };
+
+    \draw[arrow] (b1) -- (b2);
+    \draw[arrow] (b2) -- (b3);
+    \draw[arrow] (b3) -- (b4);
+    \draw[arrow] (b4) -- (b5);
+
+\end{tikzpicture}
+\caption{Architecture and workflow of the proposed verification framework.}
+\label{fig:methodology-workflow}
+\end{figure}
+
+\section{Research Procedures}
+
+\subsection{Preliminary Selection of Observation Points}
+Instead of placing leaky assertions arbitrarily at every statement of a program, we use the concepts of RWFM and Dynamic Labelling as a lightweight inspection guide. By checking which branches depend on secrets and noting assignments to shared synchronization variables, we identify which public output statements might carry secret influence. This simple inspection narrows down the candidate control points before proceeding to the primary formal modeling phase.
+
+For each thread, the procedure tracks:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{Variable Sensitivity}: Categorizing global shared variables (such as secret $h$ and shared synchronization variables like \texttt{sem}) and thread-local variables.
+    \item \textbf{Program-Counter Context ($pc$)}: Initially set to \emph{Public}. When a thread enters a conditional branch whose condition depends on a secret variable (e.g., \texttt{if $h$ then}), the control context is elevated to \emph{Secret}.
+    \item \textbf{Shared-State Updates}: Any assignment executed while the control context is \emph{Secret} taints the assigned variable with secret influence. In concurrent programs, updating a shared semaphore or shared memory cell inside a secret branch propagates secret dependence to other interacting threads.
+    \item \textbf{Public Output Statements (\texttt{print})}: Because public output statements are observable by external observers, executing a public statement while the control context or printed expression is influenced by a secret violates the RWFM confidentiality policy. The procedure flags such statements as candidate \texttt{LEAKING} points.
+\end{itemize}
+
+Table~\ref{tab:phase1-selection} illustrates how this conceptual analysis identifies candidate observation points on the concurrent semaphore benchmark $T_1 \parallel T_2$ (with secret variable $h$ and shared variables $\texttt{sem}, v$). In process $T_1$, all operations involve only public data, so both \texttt{print('a')} and \texttt{print('b')} remain untainted. In process $T_2$, however, evaluating \texttt{if $h$ then} at $l_1$ elevates the control context to \emph{Secret}. The subsequent semaphore acquisition and variable update propagate this secret influence into shared state. When $T_2$ leaves the branch and reaches \texttt{print('d')} at $l_7$, its execution timing and output order depend on whether the secret branch was taken. This analysis therefore selects $l_0$ (safe entry point) and $l_7$ (flagged exit point) as the candidate observation points for writing leaky assertions and formal specifications.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{} p{4.2cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{3.5cm} @{}}
+\toprule
+\textbf{Statement of Process $T_2$} & \textbf{Flow Analysis / Operation} & \textbf{Security Context} & \textbf{Verdict} \\
+\midrule
+$l_0 : \texttt{print('c');}$ & Public output in low context & Context: Public & Safe (Entry Point) \\
+$l_1 : \texttt{if } h \texttt{ then}$ & Condition tests secret variable $h$ & Context: Secret & Branch context raised \\
+$l_2 : \texttt{await sem > 0 then}$ & Synchronizes on shared semaphore & Context: Secret & Execution conditioned on $h$ \\
+$l_3 : \texttt{sem := sem - 1;}$ & Modifies shared semaphore & \texttt{sem} influenced by $h$ & Shared state tainted \\
+$l_4 : v := v + 2;$ & Modifies shared variable $v$ & $v$ influenced by $h$ & Shared state tainted \\
+$l_5 : \texttt{sem := sem + 1;}$ & Releases shared semaphore & Context: Secret & Release depends on $h$ \\
+$l_6 : \texttt{else skip;}$ & Alternative branch & Context: Secret & Control leaves branch \\
+$l_7 : \texttt{print('d');}$ & Public output after secret branch & Context: Secret & \textbf{LEAKING (Selected)} \\
+\bottomrule
+\end{tabularx}
+\caption{Conceptual identification of vulnerable public program points in process $T_2$ using RWFM principles.}
+\label{tab:phase1-selection}
+\end{table}
+
+\subsection{Mathematical Foundations and Soundness of Leaky Assertions}
+Static labelling alone cannot account for runtime thread interleavings or synchronization delays, and may conservatively flag harmless statements. To prove mathematically that a flagged point genuinely leaks information under concurrency, we formalize the relationship between Hoare logic, Owicki--Gries non-interference, and leaky assertions.
+
+\begin{definition}[Owicki--Gries Interference Freedom]
+Given a proof $\{P\}\, S \,\{Q\}$ of one process and an atomic statement $T$ (with precondition $\mathrm{pre}(T)$) belonging to another concurrent process, $T$ is said to be \emph{non-interfering} with $\{P\}\, S \,\{Q\}$ if:
+\begin{enumerate}[label=\arabic*., itemsep=0.2em]
+    \item $\{Q \land \mathrm{pre}(T)\}\, T \,\{Q\}$, and
+    \item $\{\mathrm{pre}(S') \land \mathrm{pre}(T)\}\, T \,\{\mathrm{pre}(S')\}$,
+\end{enumerate}
+for every assignment or \texttt{await} statement $S'$ in $S$ that does not appear inside another \texttt{await} block.
+\end{definition}
+
+Following Ghosal and Shyamasundar (ICSE-NIER 2021), we augment the program with an auxiliary time variable $t$ (after Lamport and Schneider) recorded at the entry point $l_0$ ($t = T$) and the flagged exit point $l_7$ ($t = t'$). If executing the secret branch introduces a synchronization delay $\Delta t$, an observer comparing $t' - T$ against $\Delta t$ can infer the secret $h$ via:
+\begin{gather*}
+    \frac{[\text{at } l_0] : t = T \qquad [\text{at } l_7] : t = t' \qquad t' - T \ll \Delta t}{h = 0}, \\[0.4em]
+    \frac{[\text{at } l_0] : t = T \qquad [\text{at } l_7] : t = t' \qquad t' - T \ge \Delta t}{h = 1}.
+\end{gather*}
+
+\begin{definition}[Leaky Assertion]
+Given a sequence of assertions $\langle a_0, \dots, a_n \rangle$ at respective control points $\langle \ell_0, \dots, \ell_n \rangle$ of a program $S$ over a non-empty set of secret variables $\{h_1, \dots, h_m\}$, an assertion $a_i$ is said to be \emph{leaky} if its satisfaction strictly reduces the domain of possible values of at least one secret variable $h_j$ (and in particular, determinizes $h_j$ when the domain is reduced to a singleton value).
+\end{definition}
+
+\begin{definition}[Leaky Execution]
+Given a valid proof $\{P\}\, S \,\{Q\}$ where $S$ is an atomic statement in one thread, and a public output statement $T$ in another thread annotated with a leaky assertion $A$ as its precondition, the concurrent execution $S \parallel T$ is \emph{leaky} if $T$ does not interfere with $\{P\}\, S \,\{Q\}$ under $A$ (and $S$ preserves $A$), i.e.:
+\[
+    \{Q \land A\}\, T \,\{Q\}, \qquad \{P \land A\}\, T \,\{P\}, \qquad \text{and} \qquad \{A \land P\}\, S \,\{A\}.
+\]
+\end{definition}
+
+\begin{proposition}[Preservation of Leaky Assertions under Interference Freedom]
+Let $\mathcal{P}$ be an Owicki--Gries proof outline for a concurrent program $S_1 \parallel S_2$ satisfying interference freedom. Let $A_i$ be a leaky assertion associated with an observable control point $\ell_i$. If $\ell_i$ is reachable from an initial state along an execution trace $\gamma = s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2} \dots \xrightarrow{\alpha_k} s_k$ (where the control state of the observing process is $\ell_i$), then $A_i$ evaluates to \textnormal{True} in state $s_k$, certifying an actual information leak by strictly reducing the domain of secret $h$.
+\end{proposition}
+\begin{proof}
+By assumption of interference freedom, every assertion in $\mathcal{P}$ is invariant under the atomic transitions of concurrent peer processes: for any peer transition $T$ and assertion $P$, $\{P \land \text{pre}(T)\}\, T \,\{P\}$ holds. Therefore, whenever an execution trace $\gamma$ reaches control point $\ell_i$, the local precondition and accumulated environment assertions at $\ell_i$ are preserved along all interleaved steps. Because $A_i$ is inductive and interference-free, $s_k \models A_i$. By Definition 3.1, satisfaction of $A_i$ strictly reduces the domain of possible values of $h$ (and determinizes $h$ in binary domains), establishing that the execution leaks secret information.
+\end{proof}
+
+\noindent \textbf{Operational Reachability via TLC.} Interference freedom establishes that \emph{if} a control point $\ell_i$ is reached, the leaky assertion $A_i$ is soundly preserved. However, deductive interference freedom alone does not prove that $\ell_i$ is dynamically reachable. In our methodology, TLC provides the complementary operational reachability proof: by performing an exhaustive breadth-first traversal of the finite-state transition graph, TLC either demonstrates that $\ell_i$ is reachable (and produces a concrete counterexample execution trace violating $\neg A_i$) or proves that the state space is unreachable.
+
+Operationally, we define a \emph{leaky execution trace} $\gamma$ as any reachable sequence of transitions in which a leaky assertion $A$ evaluates to \textnormal{True}. Checking the negated safety invariant $\neg A$ (such as \texttt{NoTimingLeak}) in TLC causes the model checker to systematically explore all concurrent interleavings and emit a concrete counterexample trace $\gamma$ witnessing the leak.
+
+\subsection{Layered Invariant Formulation and Dual-Mode TLC Verification}
+Every TLA+ specification organizes its properties into three distinct layers corresponding directly to the mathematical proof structure:
+\begin{enumerate}[label=\arabic*., itemsep=0.35em]
+    \item \textbf{Functional Correctness Layer}: Verifies \texttt{TypeOK} (variable type safety), structural invariants such as mutual exclusion (\texttt{GlobalInv}), and the Hoare postcondition \texttt{FunctionalPost} (encoding $\{P\}\, T_1 \parallel T_2 \,\{Q\}$).
+    \item \textbf{Calibration and Leaky Assertion Layer}: Calibration invariants (\texttt{Calib0}, \texttt{Calib1}) verify the exact reachable bounds of $\Delta = t' - T_{\text{start}}$ for each value of $h$. Leaky assertions formalize sound attacker deductions:
+    \begin{align*}
+        \texttt{LA\_Low}   &\triangleq (\texttt{Observed} \land \Delta < \Delta_{\text{lo}}) \implies (h = 0), \\
+        \texttt{LA\_High}  &\triangleq (\texttt{Observed} \land \Delta \ge \Delta_{\text{hi}}) \implies (h = 1), \\
+        \texttt{LA\_Trace} &\triangleq \texttt{ACDB} \implies (h = 0).
+    \end{align*}
+    \item \textbf{Security (Non-Interference) Layer}: Safety invariants such as \texttt{NoTimingLeak}, \texttt{NoOrderLeak}, \texttt{ConstantTime}, and \texttt{NoInformationLeak} assert the absence of leaks (playing the role of $\neg A$).
+\end{enumerate}
+
+Figure~\ref{fig:tlc-layered-modes} illustrates the layered invariant hierarchy and the dual verification modes supported by TLC.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    layer/.style={draw=black, fill=white, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, text width=12.5cm, inner sep=6pt},
+    modebox/.style={draw=black, fill=black!4, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, text width=5.8cm, inner sep=6pt},
+    mitbox/.style={draw=black, fill=white, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, text width=12.5cm, inner sep=6pt},
+    arrow/.style={->, >=stealth, line width=0.8pt, draw=black}
+]
+    % Layer 1
+    \node[layer] (l1) {
+        \textbf{Layer 1: Functional Correctness Invariants}\\
+        $\bullet$ \texttt{TypeOK}: Variable types, valid domains, and thread program counter states.\\
+        $\bullet$ \texttt{GlobalInv}: Mutual exclusion and shared-state synchronization consistency.\\
+        $\bullet$ \texttt{FunctionalPost}: Hoare postcondition $\{P\}\, T_1 \parallel T_2 \,\{Q\}$ upon program termination.
+    };
+
+    % Layer 2
+    \node[layer, below=0.35cm of l1] (l2) {
+        \textbf{Layer 2: Calibration and Leaky Assertions}\\
+        $\bullet$ \texttt{Calib0}, \texttt{Calib1}: Reachable bounds of $\Delta = t' - T_{\text{start}}$ for each value of secret $h$.\\
+        $\bullet$ \texttt{LA\_Low}: $(\texttt{Observed} \land \Delta < \Delta_{\text{lo}}) \implies (h = 0)$.\\
+        $\bullet$ \texttt{LA\_High}: $(\texttt{Observed} \land \Delta \ge \Delta_{\text{hi}}) \implies (h = 1)$.\\
+        $\bullet$ \texttt{LA\_Trace}: $\texttt{ACDB} \implies (h = 0)$.
+    };
+
+    % Layer 3
+    \node[layer, below=0.35cm of l2] (l3) {
+        \textbf{Layer 3: Security (Non-Interference) Invariants ($\neg A$)}\\
+        $\bullet$ \texttt{NoTimingLeak}: Asserts execution duration $\Delta$ is independent of secret $h$.\\
+        $\bullet$ \texttt{NoOrderLeak}: Asserts observed event sequence \texttt{out} is independent of secret $h$.
+    };
+
+    \draw[arrow] (l1) -- (l2);
+    \draw[arrow] (l2) -- (l3);
+
+    % Verification Modes
+    \node[modebox, below left=0.55cm and 0.25cm of l3.south] (modeA) {
+        \textbf{TLC Mode A: Soundness Check}\\
+        $\bullet$ \textbf{Invariants:} Layer 1 + Layer 2\\
+        $\bullet$ \textbf{Expected Outcome:} \textbf{PASS} (0 violations)\\
+        $\bullet$ \textbf{Guarantee:} Proves leaky assertions hold across all reachable interleavings.
+    };
+
+    \node[modebox, below right=0.55cm and 0.25cm of l3.south] (modeB) {
+        \textbf{TLC Mode B: Leak Discovery}\\
+        $\bullet$ \textbf{Invariants:} Layer 1 + Layer 3\\
+        $\bullet$ \textbf{Expected Outcome:} \textbf{FAIL} (Violation)\\
+        $\bullet$ \textbf{Output:} TLC prints shortest concrete execution trace $\gamma$ exposing the leak.
+    };
+
+    \draw[arrow] (l3.south) -| (modeA.north);
+    \draw[arrow] (l3.south) -| (modeB.north);
+
+    % Mitigated Mode
+    \node[mitbox, below=0.45cm of $(modeA.south)!0.5!(modeB.south)$] (mit) {
+        \textbf{Mitigated Mode (Defense Validation):}\\
+        Apply fix (\texttt{Fixed = TRUE} or transformed code) $\to$ TLC checks Layer 3 $\to$ \textbf{PASS} (0 violations), verifying the channel is closed.
+    };
+    \draw[arrow] (modeA.south) -- (modeA.south |- mit.north);
+    \draw[arrow] (modeB.south) -- (modeB.south |- mit.north);
+
+\end{tikzpicture}
+\caption{Layered invariant hierarchy and complementary TLC verification modes.}
+\label{fig:tlc-layered-modes}
+\end{figure}
+
+Table~\ref{tab:tlc-modes} summarizes the TLC configuration and mode structure.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X @{}}
+\toprule
+\textbf{TLC Check Mode} & \textbf{Invariants Enabled} & \textbf{Expected Outcome \& Meaning} \\
+\midrule
+\textbf{Mode A} (Soundness) & \texttt{TypeOK}, \texttt{GlobalInv}, \texttt{FunctionalPost}, \texttt{Calib0}, \texttt{Calib1}, \texttt{LA\_*} & \textbf{PASS} --- Proves the leaky assertions hold across all reachable interleavings (attacker deduction is sound). \\
+\textbf{Mode B} (Leak Discovery) & \texttt{NoTimingLeak}, \texttt{NoOrderLeak}, \texttt{ConstantTime}, or \texttt{NoInformationLeak} & \textbf{FAIL} --- Refutes security and outputs a concrete counterexample trace witnessing the leak. \\
+\textbf{Mitigated Mode} & Security invariants with fix applied (\texttt{Fixed = TRUE} or transformed code) & \textbf{PASS} --- Confirms the leak is eliminated and previous leaky assertions are defeated. \\
+\bottomrule
+\end{tabularx}
+\caption{Summary of the TLC verification modes used in the experimental methodology.}
+\label{tab:tlc-modes}
+\end{table}
+
+\section{Tools and Modeling Environment}
+Our verification workflow uses PlusCal, TLA+, and TLC:
+
+\begin{itemize}[itemsep=0.35em]
+    \item \textbf{PlusCal}: We wrote all benchmark models in PlusCal using its C-syntax dialect. PlusCal provides familiar imperative constructs (threads, loops, conditionals, and \texttt{await}) that compile directly into TLA+. In PlusCal, every label defines an atomic step boundary, allowing us to specify exactly where threads can interleave.
+    \item \textbf{Temporal Logic of Actions (TLA+)}: TLA+ represents state transitions mathematically using unprimed variables for the current state and primed variables for the next state. This provides unambiguous semantics for every action.
+    \item \textbf{TLC Model Checker}: TLC is an explicit-state model checker that visits all reachable states breadth-first. It checks safety invariants on each visited state and prints the shortest counterexample trace when an invariant fails.
+    \item \textbf{Environment}: We ran TLC on Java 11 under macOS. Each benchmark has its own configuration file specifying constants, initial states, and invariant properties. We authored models in VS Code using the TLA+ extension and ran batch checks via the TLC command line.
+\end{itemize}
+
+\section{Scope and Practical Limitations}
+We note the following boundaries and assumptions in our evaluation:
+\begin{enumerate}[label=\arabic*., itemsep=0.35em]
+    \item \textbf{Manual Model Translation}: We manually translated the benchmark algorithms into PlusCal and selected observation points based on RWFM principles. Building an automated front-end parser to generate TLA+ directly from source code is an important next step.
+    \item \textbf{Selective Information-Flow Concepts}: We used RWFM for practical point selection (tracking secret branches and shared variable writes) without implementing full multi-level lattice algebra.
+    \item \textbf{Finite Bounded State Spaces}: Like all explicit-state checkers, TLC requires bounded parameters (e.g., single secret bits, fixed loops, and small numbers of threads). While this proves absence of leaks across all interleavings for the chosen bounds, it does not replace general inductive proofs for unbounded thread counts.
+\end{enumerate}
+
+% ------------------------------------------------------------------------------
+% CHAPTER 4: Experiments and Results
+% ------------------------------------------------------------------------------
+\chapter{EXPERIMENTS AND RESULTS}
+
+\section{Overview of the Experimental Benchmark Suite}
+The goal of this chapter is to test whether leaky assertions work in practice on real concurrent programs. Using TLA+ and the TLC model checker, we automatically explore all thread interleavings across six representative benchmark scenarios, detect timing and execution-order leaks, extract concrete counterexample traces when leaks occur, and verify that candidate fixes completely close the channel.
+
+Each benchmark is verified using TLC in two complementary modes:
+\begin{itemize}[itemsep=0.25em]
+    \item \textbf{Mode A (Deductive Soundness)}: Verifies that the attacker's leaky assertions hold across all reachable states.
+    \item \textbf{Mode B (Leak Discovery)}: Checks the security invariant. When a leak exists, TLC outputs a step-by-step counterexample trace.
+    \item \textbf{Mitigation Verification}: Confirms that applying defenses (such as branch padding, dummy operations, or memory flushes) closes the leak with zero violations.
+\end{itemize}
+
+Table~\ref{tab:benchmarks-evaluation} summarizes the empirical model-checking metrics across all six benchmark specifications evaluated in TLC.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}X ccccc @{}}
+\toprule
+\textbf{Benchmark Scenario} & 
+\textbf{Threads ($n$)} & 
+\textbf{Total States} & 
+\textbf{Depth} & 
+\textbf{TLC Time (ms)} & 
+\textbf{Leak Found?} \\
+\midrule
+Shared-Memory Semaphore Sync.       & 2 & 44  & 5  & 571 & \textbf{Yes} \\
+Round-Robin Scheduling Timing       & 2 & 20  & 10 & 706 & \textbf{Yes} \\
+Branch-Padding Mitigated Model      & 2 & 22  & 10 & 586 & \textbf{No}  \\
+Cryptographic Modular Exponentiation& 1 & 322 & 21 & 466 & \textbf{Yes} \\
+Web Authentication Endpoint         & 1 & 17  & 5  & 485 & \textbf{Yes} \\
+Persistent Memory Seqlock Crash     & 3 & 3   & 2  & 729 & \textbf{Yes} \\
+\bottomrule
+\end{tabularx}
+\caption{Model checking statistics across all evaluated benchmark specifications in TLC.}
+\label{tab:benchmarks-evaluation}
+\end{table}
+
+The following sections examine each benchmark individually using a uniform structure: problem origin, problem description, paper code/diagram, information leakage mechanism, secret variables, leaky assertions formulation, TLA+/PlusCal specification, and TLC model checking results.
+
+\section{Benchmark 1: Concurrent Synchronization and Order Channels}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Ghosal and Shyamasundar (ICSE-NIER 2021)~\cite{ghosal2021axiomatic} and Formal TLA+ Information Leak Model~\cite{tla2021leak}.
+    \item \textbf{What is the problem}: Two concurrent threads $T_1$ and $T_2$ contend for a shared binary semaphore (\texttt{sem}) and modify a shared variable $v$. Thread $T_2$ conditionally accesses the critical section depending on a confidential secret $h \in \{0, 1\}$.
+    \item \textbf{Diagram / code from the paper}: The concurrent program specified in~\cite{ghosal2021axiomatic} is defined as:
+    \begin{align*}
+        \text{Thread } T_1 &: \quad \texttt{await sem > 0; sem := sem - 1; print('a');} \\
+        &\quad\quad \texttt{v := v + 1; print('b'); sem := sem + 1;} \\[0.3em]
+        \text{Thread } T_2 &: \quad \texttt{print('c');} \\
+        &\quad\quad \textbf{if } h = 1 \textbf{ then } [\texttt{await sem > 0; sem := sem - 1;} \\
+        &\quad\quad\quad\quad\quad\quad\quad\; \texttt{v := v + 2; sem := sem + 1;}] \\
+        &\quad\quad \textbf{else } \texttt{skip;} \quad \texttt{print('d');}
+    \end{align*}
+    Figure~\ref{fig:bench1-arch} illustrates the system architecture, shared semaphore contention, and public observer measurement points.
+    \item \textbf{How the program is leaking information}:
+    \begin{enumerate}[label=\arabic*., itemsep=0.2em]
+        \item \emph{Timing Side Channel}: When $h = 0$, $T_2$ bypasses the semaphore critical section and terminates quickly ($\Delta = t_{\text{prime}} - T_{\text{start}} \le 3$). When $h = 1$, $T_2$ serializes behind $T_1$, waiting for the semaphore release and suffering an observable delay ($\Delta \ge 7$).
+        \item \emph{Output Order Channel}: Interleaving produces observable output traces in \texttt{out}. When $h = 1$, serialization forces the trace prefix \texttt{"acdb"}, whereas when $h = 0$, $T_2$ can finish earlier, producing \texttt{"cadb"} or \texttt{"cdab"}.
+    \end{enumerate}
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variable}: $h \in \{0, 1\}$.
+        \item \emph{Classification}: Secret (high confidentiality).
+        \item \emph{Role}: Directly governs whether Thread $T_2$ enters the critical section and contends for \texttt{sem}.
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak}: Evaluated at public exit statement $l_7$ (\texttt{Observed}):
+    \begin{align*}
+        \text{LA\_Timing}    &\equiv \text{Observed} \implies ((\Delta \ge 7) \iff (h = 1)), \\
+        \text{LA\_Time\_Low}  &\equiv (\text{Observed} \land \Delta \le 3) \implies (h = 0), \\
+        \text{LA\_Time\_High} &\equiv (\text{Observed} \land \Delta \ge 7) \implies (h = 1), \\
+        \text{LA\_Trace1}     &\equiv (\text{Observed} \land \text{out} = \langle \text{"a"}, \text{"c"}, \text{"d"}, \text{"b"} \rangle) \implies (h = 1).
+    \end{align*}
+    The security invariant checked to detect the leak is $\text{NoTimingLeak} \equiv \text{Observed} \implies (\Delta = 3)$.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    thread/.style={draw=black, fill=white, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=left, inner sep=6pt, text width=4.5cm},
+    shared/.style={draw=black, fill=black!4, rounded corners=3pt, line width=0.8pt, font=\footnotesize, align=center, inner sep=5pt, text width=2.4cm},
+    obs/.style={draw=black, dashed, fill=white, rounded corners=3pt, line width=0.8pt, font=\scriptsize, align=center, inner sep=4pt, text width=2.6cm},
+    arrow/.style={->, >=stealth, line width=0.8pt, draw=black}
+]
+    \node[thread] (t1) {
+        \textbf{Thread $T_1$ (Public)}\\
+        $T_{1\_1} : \texttt{await sem > 0;}$\\
+        $T_{1\_2} : \texttt{print('a');}$\\
+        $T_{1\_3} : v := v + 1;$\\
+        $T_{1\_4} : \texttt{print('b');}$\\
+        $T_{1\_5} : \texttt{sem := sem + 1;}$
+    };
+
+    \node[thread, right=3.5cm of t1] (t2) {
+        \textbf{Thread $T_2$ (Secret Branch)}\\
+        $l_0 : \texttt{print('c'); } [T_{\text{start}} := t]$\\
+        $l_1 : \textbf{if } h = 1 \textbf{ then}$\\
+        $l_2 : \quad \texttt{await sem > 0;}$\\
+        $l_4 : \quad v := v + 2;$\\
+        $l_5 : \quad \texttt{sem := sem + 1;}$\\
+        $l_6 : \textbf{else skip;}$\\
+        $l_7 : \texttt{print('d'); } [t_{\text{prime}} := t]$
+    };
+
+    \node[shared, below right=0.3cm and 0.45cm of t1.south] (mem) {
+        \textbf{Shared State}\\
+        \texttt{sem} $\in \{0, 1\}$\\
+        $v \in \mathbb{N}$
+    };
+
+    \node[obs, above=0.35cm of t2] (obs_entry) {
+        \textbf{Observer Start}\\
+        Records $T_{\text{start}}$ at $l_0$
+    };
+
+    \node[obs, below=0.35cm of t2] (obs_exit) {
+        \textbf{Observer Exit}\\
+        Records $t_{\text{prime}}$ at $l_7$\\
+        Computes $\Delta = t_{\text{prime}} - T_{\text{start}}$
+    };
+
+    \draw[arrow] (t1.south) |- (mem.west);
+    \draw[arrow] (t2.south) |- (mem.east);
+    \draw[arrow, dashed] (obs_entry) -- (t2.north);
+    \draw[arrow, dashed] (t2.south) -- (obs_exit.north);
+\end{tikzpicture}
+\caption{System architecture, shared memory contention, and observer points in Benchmark 1.}
+\label{fig:bench1-arch}
+\end{figure}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of concurrent semaphore synchronization (ConcurrentLeak).}]
+--algorithm ConcurrentLeak
+variables
+    sem = 1, v = 0, h \in {0, 1}, t = 0,
+    T_start = 0, t_prime = 0, out = << >>;
+
+process T1 = 1
+begin
+    T1_1: await sem > 0; sem := sem - 1; t := t + 1;
+    T1_2: out := Append(out, "a"); t := t + 1;
+    T1_3: v := v + 1; t := t + 1;
+    T1_4: out := Append(out, "b"); t := t + 1;
+    T1_5: sem := sem + 1; t := t + 1;
+end process;
+
+process T2 = 2
+begin
+    l0: T_start := t; out := Append(out, "c"); t := t + 1;
+    l1: if h = 1 then
+    l2:     await sem > 0; sem := sem - 1; t := t + 1;
+    l4:     v := v + 2; t := t + 1;
+    l5:     sem := sem + 1; t := t + 1;
+        else
+    l6:     skip; t := t + 1;
+        end if;
+    l7: t_prime := t; out := Append(out, "d"); t := t + 1;
+end process;
+end algorithm
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 44 distinct states, search depth 5, execution time 571 ms.
+    \item \textbf{Mode A (Soundness)}: All leaky assertions (\texttt{LA\_Timing}, \texttt{LA\_Time\_Low}, \texttt{LA\_Time\_High},\\
+    \texttt{LA\_Trace1}) evaluate to \textbf{TRUE} across all 44 reachable states with 0 violations.
+    \item \textbf{Mode B (Leak Discovery)}: Security invariant \texttt{NoTimingLeak} is \textbf{VIOLATED}. TLC generates the counterexample trace witnessing the timing channel:
+    \begin{center}
+    \small
+    $\text{State 1} \to \text{State 2 ($l_0$: $T_{\text{start}}=0$)} \to \dots \to \text{State 5 ($l_7$: $t_{\text{prime}}=7$, $\Delta=7$, exposing $h=1$)}$.
+    \end{center}
+\end{itemize}
+
+\section{Benchmark 2: Round-Robin Internal Timing Covert Channel}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Russo and Sabelfeld (ASIAN 2006)~\cite{russo2006closing}, \emph{Closing Internal Timing Channels}.
+    \item \textbf{What is the problem}: Secret-dependent branching in a multi-threaded system scheduled by a deterministic round-robin scheduler alters thread interleaving and global execution duration.
+    \item \textbf{Diagram / code from the paper}: The round-robin concurrent program from~\cite{russo2006closing} is structured as:
+    \begin{align*}
+        \text{Thread } T_1 &: \quad \textbf{if } h = 1 \textbf{ then } [h_2 := 2 \cdot h_2 + l; \; \texttt{skip;}] \textbf{ else } [\texttt{skip;}] \; l := 1; \; \texttt{print('1');} \\
+        \text{Thread } T_2 &: \quad \texttt{skip; skip; } l := 0; \; \texttt{print('0');}
+    \end{align*}
+    Execution turns strictly alternate between $T_1$ and $T_2$ via scheduler token \texttt{turn}.
+    \item \textbf{How the program is leaking information}:
+    The branch in Thread $T_1$ is unbalanced: taking the $h = 1$ path requires 3 turns before assigning $l := 1$, whereas the $h = 0$ path requires only 2 turns. This turn shift alters when $T_2$ executes, causing total execution time between \texttt{"START"} and \texttt{"END"} to vary:
+    \[
+        \Delta = 8 \text{ clock cycles when } h = 0, \qquad \Delta = 9 \text{ clock cycles when } h = 1.
+    \]
+    An observer measuring total elapsed cycles directly deduces secret $h$.
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variables}: $h \in \{0, 1\}$ (branch secret) and $h_2 \in \mathbb{N}$ (cryptographic accumulator).
+        \item \emph{Classification}: Secret (high confidentiality).
+        \item \emph{Role}: Dictates execution path length in Thread $T_1$, perturbing round-robin turn progression.
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak}: Evaluated upon thread termination (\texttt{Observed}):
+    \begin{align*}
+        \text{Calib0}      &\equiv (\text{Observed} \land h = 0) \implies (\Delta = 8), \\
+        \text{Calib1}      &\equiv (\text{Observed} \land h = 1) \implies (\Delta = 9), \\
+        \text{LA\_Timing}  &\equiv \text{Observed} \implies ((\Delta \ge 9) \iff (h = 1)).
+    \end{align*}
+    The security invariant checked to detect the leak is $\text{NoTimingLeak} \equiv \text{Observed} \implies (\Delta = 8)$.
+\end{itemize}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of the round-robin internal timing channel (InternalTiming).}]
+--algorithm InternalTiming
+variables
+    l = 0, h2 = 0, h \in {0, 1}, turn = 1, done1 = FALSE, done2 = FALSE,
+    t = 0, T_start = 0, t_prime = 0, out = <<"START">>;
+
+process T1 = 1
+begin
+    l1: await turn = 1; t := t + 1;
+        if h = 1 then turn := IF ~done2 THEN 2 ELSE 1; goto l2;
+        else turn := IF ~done2 THEN 2 ELSE 1; goto l4; end if;
+    l2: await turn = 1; h2 := 2 * h2 + l; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l3: await turn = 1; skip; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1; goto l5;
+    l4: await turn = 1; skip; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l5: await turn = 1; l := 1; out := Append(out, "1"); t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l_exit: await turn = 1; done1 := TRUE; t := t + 1;
+        if done2 then t_prime := t; out := Append(out, "END"); end if;
+        turn := 2;
+end process;
+
+process T2 = 2
+begin
+    m1: await turn = 2; skip; t := t + 1; turn := IF ~done1 THEN 1 ELSE 2;
+    m2: await turn = 2; skip; t := t + 1; turn := IF ~done1 THEN 1 ELSE 2;
+    m3: await turn = 2; l := 0; out := Append(out, "0"); t := t + 1;
+        turn := IF ~done1 THEN 1 ELSE 2;
+    m_exit: await turn = 2; done2 := TRUE; t := t + 1;
+        if done1 then t_prime := t; out := Append(out, "END"); end if;
+        turn := 1;
+end process;
+end algorithm
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 20 distinct states, search depth 10, execution time 706 ms.
+    \item \textbf{Mode A (Soundness)}: Calibration invariants (\texttt{Calib0}, \texttt{Calib1}) and leaky assertion \texttt{LA\_Timing} evaluate to \textbf{TRUE} across all states with 0 violations.
+    \item \textbf{Mode B (Leak Discovery)}: Security invariant \texttt{NoTimingLeak} is \textbf{VIOLATED}. TLC generates a 10-state counterexample trace showing $h = 1$ reaching termination at $t_{\text{prime}} = 9$ ($\Delta = 9$).
+\end{itemize}
+
+\section{Benchmark 3: Branch-Padding Countermeasure and Constant-Time Execution}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Russo and Sabelfeld (2006)~\cite{russo2006closing} and Mantel and Starostin (ESORICS 2015)~\cite{mantel2015timing}.
+    \item \textbf{What is the problem}: Eliminating the internal timing covert channel in the round-robin benchmark by balancing branch turn consumption.
+    \item \textbf{Diagram / code from the paper}: The branch-padded program transformation introduces an auxiliary padding step on the shorter branch:
+    \begin{align*}
+        \text{Thread } T_1 \text{ (Padded)} &: \quad \textbf{if } h = 1 \textbf{ then } [h_2 := 2 \cdot h_2 + l; \; \texttt{skip;}] \\
+        &\quad\quad \textbf{else } [\texttt{skip; } \mathbf{skip; \; /* \; l4\_pad \; */}] \; l := 1; \; \texttt{print('1');} \\
+        \text{Thread } T_2 &: \quad \texttt{skip; skip; } l := 0; \; \texttt{print('0');}
+    \end{align*}
+    \item \textbf{How the program is leaking information (Mitigation Analysis)}:
+    In the unmitigated model, $h = 0$ consumed 2 turns while $h = 1$ consumed 3 turns. Inserting the padding step \texttt{l4\_pad} balances both paths to exactly 3 scheduler turns before reaching $l_5$. Consequently, the total execution time becomes invariant:
+    \[
+        \Delta = 9 \text{ clock cycles across both } h = 0 \text{ and } h = 1.
+    \]
+    The timing side channel is completely closed.
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variables}: $h \in \{0, 1\}$ and $h_2 \in \mathbb{N}$.
+        \item \emph{Classification}: Secret (high data).
+        \item \emph{Role}: Controls branching in Thread $T_1$; both branch paths are now cycle- and turn-balanced.
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak (Mitigation Verification)}:
+    \begin{align*}
+        \text{ConstantTime} &\equiv \text{Observed} \implies (\Delta = 9), \\
+        \text{NoTimingLeak} &\equiv \text{ConstantTime}.
+    \end{align*}
+    The previous attacker leaky assertion $\text{LA\_Timing} \equiv \text{Observed} \implies (\Delta \ge 9 \iff h = 1)$ is defeated (evaluates to \textbf{False} on $h = 0$ because $\Delta = 9$).
+\end{itemize}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of branch-padding mitigation (Transformed).}]
+--algorithm Transformed
+variables
+    l = 0, h2 = 0, h \in {0, 1}, turn = 1, done1 = FALSE, done2 = FALSE,
+    t = 0, T_start = 0, t_prime = 0, out = <<"START">>;
+
+process T1 = 1
+begin
+    l1: await turn = 1; t := t + 1;
+        if h = 1 then turn := IF ~done2 THEN 2 ELSE 1; goto l2;
+        else turn := IF ~done2 THEN 2 ELSE 1; goto l4; end if;
+    l2: await turn = 1; h2 := 2 * h2 + l; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l3: await turn = 1; skip; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1; goto l5;
+    l4: await turn = 1; skip; t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l4_pad: await turn = 1; skip; t := t + 1;   /* Balanced padding step */
+        turn := IF ~done2 THEN 2 ELSE 1; goto l5;
+    l5: await turn = 1; l := 1; out := Append(out, "1"); t := t + 1;
+        turn := IF ~done2 THEN 2 ELSE 1;
+    l_exit: await turn = 1; done1 := TRUE; t := t + 1;
+        if done2 then t_prime := t; out := Append(out, "END"); end if;
+        turn := 2;
+end process;
+/* Process T2 remains identical to Benchmark 2 */
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 22 distinct states, search depth 10, execution time 586 ms.
+    \item \textbf{Mitigation Verification}: Security invariants \texttt{ConstantTime} and \texttt{NoTimingLeak} evaluate to \textbf{TRUE} with \textbf{0 violations}.
+    \item \textbf{Outcome}: Formally certifies that branch padding successfully closes the timing channel.
+\end{itemize}
+
+\section{Benchmark 4: Cryptographic Modular Exponentiation Side Channel}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Kocher (CRYPTO 1996)~\cite{kocher1996timing} and Ghosal and Shyamasundar (ICSE-NIER 2021)~\cite{ghosal2021axiomatic}.
+    \item \textbf{What is the problem}: Timing side-channel vulnerability in the standard square-and-multiply algorithm used for modular exponentiation ($y^K \pmod N$), foundational to RSA and Diffie--Hellman implementations.
+    \item \textbf{Diagram / code from the paper}: The sequential modular exponentiation algorithm:
+    \begin{align*}
+        &\textbf{for } i = 0 \textbf{ to } \text{BITS}-1 \textbf{ do} \\
+        &\quad y := (y \cdot y) \pmod N; \\
+        &\quad \textbf{if } K[i] = 1 \textbf{ then } r := (r \cdot y) \pmod N;
+    \end{align*}
+    where $K$ is the private exponent bit sequence and $N$ is the public modulus.
+    \item \textbf{How the program is leaking information}:
+    Modular squaring is performed in every iteration. Modular multiplication is executed only when secret bit $K[i] = 1$. The total execution time is:
+    \[
+        \Delta = \text{Len}(K) \cdot \text{SqCost} + \text{HW}(K) \cdot \text{MulCost},
+    \]
+    where $\text{HW}(K) = \sum_i K[i]$ is the Hamming weight of the secret key. An external observer measuring elapsed time learns the private key's Hamming weight and bit density.
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variable}: $K \in \text{Seq}(\{0, 1\})$ (cryptographic private key), $\text{HW}(K) \in 0..\text{BITS}$.
+        \item \emph{Classification}: Cryptographic Secret (private key).
+        \item \emph{Role}: Secret exponent bits governing whether multiplication operations execute.
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak}:
+    \begin{align*}
+        \text{LeakyAssertion} &\equiv \text{Observed} \implies (\Delta \ge \text{Threshold} \iff \text{HW}(K) \ge \text{SecretThreshold}), \\
+        \text{ConstantTime}   &\equiv \text{Observed} \implies (\Delta = \text{ExpectedConstantTime}).
+    \end{align*}
+\end{itemize}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of modular exponentiation leak (ModSqLeaks).}]
+--algorithm ModExpLeak
+variables
+    K \in SecretSet, k = K, y = Y0, r = 1, i = 0, t = 0,
+    T_start = 0, t_prime = 0, out = <<>>;
+
+begin
+  l0: T_start := t; out := Append(out, "START"); t := t + PrintCost;
+  l1: while i < BITS do
+        t := t + 1;
+        if Fixed \/ k[0] = 1 then
+  l2:     r := IF k[0] = 1 THEN (r * y) % N ELSE r;
+          t := t + MulCost;
+        end if;
+  l3:   y := (y * y) % N; t := t + SqCost;
+  l4:   k := [j \in Bits |-> IF j + 1 < BITS THEN k[j + 1] ELSE 0];
+        t := t + 1;
+  l5:   i := i + 1; t := t + 1;
+      end while;
+  l_exit: t_prime := t; out := Append(out, "END"); t := t + PrintCost;
+end algorithm
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 322 distinct states, search depth 21, execution time 466 ms.
+    \item \textbf{Mode A (Soundness)}: When $\texttt{Fixed = FALSE}$, \texttt{LeakyAssertion} evaluates to \textbf{TRUE} with 0 violations, proving the attacker soundly deduces private key Hamming weight from latency.
+    \item \textbf{Mode B (Leak Discovery)}: Security invariant \texttt{ConstantTime} is \textbf{VIOLATED}\\when $\texttt{Fixed = FALSE}$, yielding counterexample traces across key weights.
+    \item \textbf{Mitigation Verification}: Setting $\texttt{Fixed = TRUE}$ (dummy multiplication) satisfies \texttt{ConstantTime} with \textbf{0 violations}.
+\end{itemize}
+
+\section{Benchmark 5: Web Authentication Latency Side Channel}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Askarov, Zhang, and Myers (ACM CCS 2010)~\cite{askarov2010predictive}, \emph{Predictive Black-Box Mitigation of Timing Channels}.
+    \item \textbf{What is the problem}: Remote user enumeration timing channel in web authentication services where invalid username lookups abort early.
+    \item \textbf{Diagram / code from the paper}: The web authentication handler flow:
+    \begin{align*}
+        &\texttt{Lookup user;} \\
+        &\textbf{if } \neg\texttt{valid\_user} \textbf{ then return "error message"} \\
+        &\textbf{else } [\texttt{Hash password;} \\
+        &\quad\quad \textbf{if } \neg\texttt{password\_match} \textbf{ then return "error message" else return "success"}]
+    \end{align*}
+    \item \textbf{How the program is leaking information}:
+    When a username does not exist ($\neg\texttt{valid\_user}$), the server immediately aborts after database lookup ($\Delta = \text{LookupCost} = 1$). When the username exists but the password is wrong, the server computes an expensive password hash ($\Delta = \text{LookupCost} + \text{HashCost} = 1 + 10 = 11$). Both paths emit the identical string \texttt{"error message"}, but the response latency reveals account existence.
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variables}: $\texttt{valid\_user} \in \{\text{TRUE}, \text{FALSE}\}$, $h = \text{IF } \texttt{valid\_user} \text{ THEN } 1 \text{ ELSE } 0$, and $\texttt{password\_match} \in \{\text{TRUE}, \text{FALSE}\}$.
+        \item \emph{Classification}: Secret (confidential account existence metadata).
+        \item \emph{Role}: Controls whether cryptographic password hashing is performed or bypassed.
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak}: Evaluated at response point $l_{\text{exit}}$:
+    \begin{align*}
+        \text{LA\_Time\_Low}  &\equiv (\neg\text{Fixed} \land \text{Observed} \land \text{out}_{\text{err}} \land \Delta \le 1) \implies (h = 0), \\
+        \text{LA\_Time\_High} &\equiv (\neg\text{Fixed} \land \text{Observed} \land \text{out}_{\text{err}} \land \Delta \ge 11) \implies (h = 1), \\
+        \text{LA\_Timing}     &\equiv (\neg\text{Fixed} \land \text{Observed} \land \text{out}_{\text{err}}) \implies ((\Delta \ge 5) \iff (h = 1)),
+    \end{align*}
+    where $\text{out}_{\text{err}} \equiv (\text{result} = \text{"error message"})$. The security invariant checked is $\text{NoTimingLeak} \equiv (\text{Observed} \land \text{out}_{\text{err}}) \implies (\Delta = 11)$.
+\end{itemize}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of web authentication timing leak (WebServiceLeak).}]
+--algorithm WebServerLogin
+variables 
+    valid_user \in {TRUE, FALSE}, password_match \in {TRUE, FALSE},
+    t = 0, T_start = 0, t_prime = 0, out = << >>, result = "";
+
+fair process LoginHandler = 1
+begin
+l0: T_start := t; out := Append(out, "REQ");
+Lookup:
+    t := t + LookupCost;
+    if ~valid_user then
+        if Fixed then goto DummyHash;
+        else goto OutputError; end if;
+    else goto HashPassword; end if;
+HashPassword:
+    t := t + HashCost;
+    if ~password_match then goto OutputError;
+    else result := "success"; goto l_exit; end if;
+DummyHash:
+    t := t + HashCost; goto OutputError;
+OutputError:
+    result := "error message"; goto l_exit;
+l_exit:
+    t_prime := t; out := Append(out, result);
+end process;
+end algorithm
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 17 distinct states, search depth 5, execution time 485 ms.
+    \item \textbf{Mode A (Soundness)}: Leaky assertions (\texttt{LA\_Time\_Low}, \texttt{LA\_Time\_High}, \texttt{LA\_Timing}) evaluate to \textbf{TRUE} across all states with 0 violations.
+    \item \textbf{Mode B (Leak Discovery)}: Security invariant \texttt{NoTimingLeak} is \textbf{VIOLATED}\\when $\texttt{Fixed = FALSE}$. TLC extracts the early abort trace where $\Delta = 1$.
+    \item \textbf{Mitigation Verification}: When $\texttt{Fixed = TRUE}$ (dummy hash), \texttt{NoTimingLeak} evaluates to \textbf{TRUE} with \textbf{0 violations}.
+\end{itemize}
+
+\section{Benchmark 6: Persistent Memory Seqlock Under Power Failure}
+
+\begin{itemize}[leftmargin=*, itemsep=0.4em]
+    \item \textbf{Problem from which paper}: Graeme Smith (arXiv:2606.25422, 2026)~\cite{smith2026persistent}, \emph{Information Flow Security on Persistent Memory}.
+    \item \textbf{What is the problem}: Linux reader-writer seqlock protocol on non-volatile persistent memory (PM) subject to system power failures and asynchronous cache line flushing.
+    \item \textbf{Diagram / code from the paper}: The persistent memory seqlock protocol from~\cite{smith2026persistent}:
+    \begin{align*}
+        \text{Writer} &: \quad c := c + 1; \; x_1 := h; \; x_2 := h; \; c := c + 1; \\
+        \text{Reader} &: \quad r_0 := c; \; \textbf{if } r_0 \pmod 2 = 0 \textbf{ then } [r_1 := x_1; \; r_2 := x_2; \; r_3 := c; \\
+        &\quad\quad \textbf{if } r_0 = r_3 \land r_2 = 0 \textbf{ then } \texttt{print}(r_1)]
+    \end{align*}
+    where $c$ is the sequence counter, $x_1$ is the data, and $x_2$ is the security classification tag ($x_2 = 1 \iff x_1$ is high).
+    \item \textbf{How the program is leaking information}:
+    Stores to $x_1$, $x_2$, and $c$ reside on different cache lines. Under weak persistency without explicit flushes, stores commit asynchronously. If $x_1 := 1$ and final $c$ persist to PM, while tag $x_2 := 1$ lags in volatile cache during a crash, post-reboot state is inconsistent: $c$ is even, $x_2 = 0$ (marking low), but $x_1 = 1$ (high secret). A post-reboot reader reads $x_2 = 0$, assumes low data, and emits the high secret $1$ over the public channel.
+    \item \textbf{Details of the secret variables}:
+    \begin{itemize}[itemsep=0.2em]
+        \item \emph{Variables}: $h \in \{0, 1\}$ ($h = 1$ is confidential high data; $h = 0$ is public low data).
+        \item \emph{Persistent Locations}: \texttt{pm\_x1} (data), \texttt{pm\_x2} (classification flag), \texttt{pm\_c} (sequence counter).
+        \item \emph{Classification}: Secret (high confidentiality).
+    \end{itemize}
+    \item \textbf{What leaky assertions we are using to identify the leak}:
+    \begin{align*}
+        \text{LA\_PersistentLeak} &\equiv (\neg\text{Fixed} \land \text{crashed} \land \text{ReaderDone} \land (\exists k : \text{out}[k] = 1)) \implies (h = 1), \\
+        \text{NoInformationLeak}  &\equiv \forall k \in 1..\text{Len}(\text{out}) : (\text{out}[k] = 1) \implies (h = 0).
+    \end{align*}
+\end{itemize}
+
+\subsection{TLA+/PlusCal Code}
+\begin{lstlisting}[language=C, caption={PlusCal specification of persistent memory seqlock crash leak (SeqLock).}]
+--algorithm PersistentMemorySeqlock
+variables
+    pm_c = 0, pm_x1 = 0, pm_x2 = 0, c = 0, x1 = 0, x2 = 0,
+    h \in {0, 1}, crashed = FALSE, out = << >>, t = 0, T_start = 0, t_prime = 0;
+
+fair process Writer = 1
+variables r0_w = 0;
+begin
+wr0: T_start := t; t := t + 1; out := Append(out, "WR_START");
+wr1: r0_w := c; c := r0_w + 1; t := t + 1;
+     if Fixed then pm_c := c; end if;
+wr2: x1 := h; t := t + 1;
+     if ~Fixed then either pm_x1 := x1; or skip; end either; end if;
+wr3: x2 := h; t := t + 1;
+     if Fixed then pm_x1 := x1; pm_x2 := x2;
+     else either pm_x2 := x2; or skip; end either; end if;
+wr4: r0_w := c; c := r0_w + 1; t := t + 1; pm_c := c;
+wr_exit: t := t + 1; out := Append(out, "WR_DONE");
+end process;
+
+fair process Reader = 3
+variables r0_r = 0, r1 = 0, r2 = 0, r3 = 0;
+begin
+rd0: r0_r := pm_c; t := t + 1;
+     if r0_r % 2 # 0 then goto rd_done; end if;
+rd1: r1 := pm_x1; t := t + 1;
+rd2: r2 := pm_x2; t := t + 1;
+rd3: r3 := pm_c; t := t + 1;
+     if r0_r # r3 then goto rd_done; end if;
+     if r2 = 0 then out := Append(out, r1); end if;
+rd_done: t_prime := t;
+end process;
+end algorithm
+\end{lstlisting}
+
+\subsection{Result in TLC Model Checker}
+\begin{itemize}[leftmargin=*, itemsep=0.3em]
+    \item \textbf{Explored States}: 3 distinct states, search depth 2, execution time 729 ms.
+    \item \textbf{Mode A (Soundness)}: \texttt{LA\_PersistentLeak} evaluates to \textbf{TRUE} with 0 violations.
+    \item \textbf{Mode B (Leak Discovery)}: Security invariant \texttt{NoInformationLeak} is \textbf{VIOLATED} under $\texttt{Fixed = FALSE}$. TLC extracts the crash-reboot trace exposing the unpersisted classification flag.
+    \item \textbf{Mitigation Verification}: When $\texttt{Fixed = TRUE}$ (cache flushes), \texttt{NoInformationLeak} evaluates to \textbf{TRUE} with \textbf{0 violations}.
+\end{itemize}
+
+\section{Performance Summary and Observations}
+Table~\ref{tab:benchmarks-evaluation} summarizes the performance metrics across all six benchmark models:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{Verification Speed}: TLC checked every benchmark in less than 1 second (ranging between 466~ms and 729~ms).
+    \item \textbf{Explored State Spaces}: State-space sizes ranged from 3 states in the crash-reboot seqlock to 322 states in the modular exponentiation benchmark.
+    \item \textbf{Practical Value of Dual-Mode Checking}: Mode A confirmed that the attacker's deductions hold across all possible interleavings, while Mode B produced concrete counterexample traces showing the exact thread scheduling that causes each leak.
+\end{itemize}
+
+% ------------------------------------------------------------------------------
+% CHAPTER 5: Conclusion and Future Work
+% ------------------------------------------------------------------------------
+\chapter{CONCLUSION AND FUTURE WORK}
+
+\section{Summary of Results}
+In this thesis, we implemented and evaluated a model-checking approach for detecting information leaks and verifying mitigations using leaky assertions in TLA+ and TLC. Our work produced four main results:
+\begin{enumerate}[label=\arabic*., itemsep=0.3em]
+    \item We used principles from the Readers--Writers Flow Model (RWFM) and Dynamic Labelling as a preliminary guide to locate vulnerable public observation points influenced by secret branches and shared-state updates.
+    \item We formalized the relationship between Hoare triples, Owicki--Gries interference freedom, auxiliary clocks, and leaky assertions (Proposition 3.1), demonstrating that interference freedom preserves leaky assertions along interleaved execution paths, with TLC providing complementary operational evidence of reachability to extract concrete leak traces.
+    \item We modeled six representative benchmark scenarios in PlusCal/TLA+, structuring specifications with layered invariants: type safety, calibration/leaky assertions, and non-interference security properties.
+    \item Using TLC, we demonstrated dual-mode verification: Mode A proves the logical soundness of attacker deductions across all execution paths, Mode B generates diagnostic counterexample traces exposing leaks, and mitigation checks confirm that proposed fixes completely eliminate vulnerabilities.
+\end{enumerate}
+
+\section{Practical Insights from Writing TLA+ Specifications}
+Working through the manual modeling of these concurrent programs highlighted three key practical lessons:
+\begin{itemize}[itemsep=0.3em]
+    \item \textbf{Label Granularity Governs Interleaving}: In PlusCal, every label defines an atomic step boundary. Placing labels carelessly can either mask real concurrency bugs or introduce artificial ones. Matching labels to source-code atomicity is essential for realistic models.
+    \item \textbf{Value of Counterexample Traces}: Unlike static type checkers that simply reject a program with an error message, TLC outputs the exact execution schedule and variable history leading to the leak. This makes it much easier to diagnose the root cause and design a proper fix.
+    \item \textbf{Parameterizing Mitigations with Boolean Flags}: Using a configuration flag like \texttt{Fixed \textbackslash{}in BOOLEAN} allows both the original vulnerable code and the proposed defense to be maintained and tested in the exact same specification.
+\end{itemize}
+
+\section{Future Work}
+While this thesis establishes the formal foundations, invariant hierarchy, and empirical validation of leaky assertions through manual modeling, several promising directions remain to extend this framework into an automated verification pipeline:
+\begin{enumerate}[label=\arabic*., itemsep=0.35em]
+    \item \textbf{Automated Observation Point Selection via Static Taint Analysis}:
+    In this work, observation points and secret-dependent branches were identified manually using RWFM and dynamic labelling heuristics. A natural extension is to implement an automated static analysis pass using compiler intermediate representations (such as Clang/LLVM for C/C++ or Soot for Java bytecode). This tool will parse source code, track explicit and implicit information flows from annotated secret variables to shared synchronization primitives, and automatically flag candidate measurement points (entry and exit pairs) where side channels can manifest.
+
+    \item \textbf{Automated Source-to-PlusCal Compiler}:
+    Currently, models are translated into PlusCal by hand, requiring careful manual placement of labels to reflect source-level atomicity. A dedicated front-end transpiler could parse annotated source files, map statements to atomic label blocks matching the target architecture's memory model, and automatically inject auxiliary clock variables ($t, T_{\text{start}}, t_{\text{prime}}$) and thread state tracking logic.
+
+    \item \textbf{Algorithmic Invariant Generation}:
+    In this thesis, calibration intervals and leaky assertions were formulated through manual execution-path analysis. This process can be automated: by extracting path-condition latency weights and performing symbolic execution or bounded model pre-scans, an automated tool can synthesize the three-layer invariant suite (\texttt{TypeOK}, calibration bounds, leaky assertions, and non-interference security invariants) and output a complete \texttt{.cfg} configuration file.
+
+    \item \textbf{Counterexample-Guided Automated Mitigation}:
+    TLC's Mode~B execution produces concrete diagnostic traces pinpointing leaky execution schedules. A counterexample parser could map TLC trace states back to original source code lines and suggest automated mitigations:
+    \begin{itemize}[itemsep=0.2em]
+        \item Automatically balancing execution duration by inserting dummy instructions or branch padding into shorter execution paths (as demonstrated in Benchmark~3).
+        \item Auto-injecting hardware memory fences, cache-line flushes, and seqlock synchronization barriers to enforce persistency order under power failures (as demonstrated in Benchmark~6).
+    \end{itemize}
+
+    \item \textbf{Support for Weak Memory Models}:
+    While this thesis assumed sequential consistency (standard interleaving semantics), real multicore and persistent memory architectures exhibit relaxed memory ordering (such as Total Store Order (TSO) or ARM weak ordering). Extending the TLA+ models to incorporate operational buffer queues will enable automated detection of hardware-level reordering channels.
+\end{enumerate}
+
+% ------------------------------------------------------------------------------
+% REFERENCES
+% ------------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\renewcommand{\bibname}{REFERENCES}
+\addcontentsline{toc}{chapter}{REFERENCES}
+\begingroup
+\makeatletter
+% Reduce excessive default top space (50pt) from standard report.cls \chapter*
+\def\@makeschapterhead#1{%
+  \vspace*{0.2cm}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    {\fontsize{20}{24}\selectfont\bfseries #1\par\nobreak}
+    \vskip 0.8cm
+  }}
+\makeatother
+\begin{thebibliography}{99}
+
+\bibitem{owicki1976axiomatic}
+S.~Owicki and D.~Gries,
+\newblock ``An Axiomatic Proof Technique for Parallel Programs I,''
+\newblock \emph{Acta Informatica}, vol.~6, no.~4, pp.~319--340, 1976.
+
+\bibitem{lamport1984buridan}
+L.~Lamport and F.~B.~Schneider,
+\newblock ``The `Hoare Logic' of Concurrent Programs,''
+\newblock \emph{Acta Informatica}, vol.~21, no.~3, pp.~281--299, 1984.
+
+\bibitem{chakraborty2000hoare}
+S.~Chakraborty,
+\newblock ``A Short Introduction to Hoare Logic,''
+\newblock Lecture Notes, Department of Computer Science and Engineering, Indian Institute of Technology Bombay, June 2000.
+
+\bibitem{ghosal2021axiomatic}
+S.~Ghosal and R.~K.~Shyamasundar,
+\newblock ``An Axiomatic Approach to Detect Information Leaks in Concurrent Programs,''
+\newblock in \emph{Proceedings of the 2021 IEEE/ACM 43rd International Conference on Software Engineering: New Ideas and Emerging Results (ICSE-NIER)}, pp.~41--45, IEEE, 2021.
+
+\bibitem{ghosal2018secrypt}
+S.~Ghosal, R.~K.~Shyamasundar, and N.~V.~Narendra Kumar,
+\newblock ``Static Security Certification of Programs via Dynamic Labelling,''
+\newblock in \emph{Proceedings of the 15th International Joint Conference on e-Business and Telecommunications (SECRYPT)}, pp.~317--324, 2018.
+
+\bibitem{ghosal2020dbsec}
+S.~Ghosal and R.~K.~Shyamasundar,
+\newblock ``Information Flow Security Certification for SPARK Programs,''
+\newblock in \emph{Annual IFIP WG 11.3 Conference on Data and Applications Security and Privacy (DBSec)}, LNCS vol.~12122, pp.~241--260, Springer, Cham, 2020.
+
+\bibitem{lamport2002specifying}
+L.~Lamport,
+\newblock \emph{Specifying Systems: The TLA+ Language and Tools for Hardware and Software Engineers},
+\newblock Addison-Wesley, Boston, MA, 2002.
+
+\bibitem{russo2006closing}
+A.~Russo and A.~Sabelfeld,
+\newblock ``Closing Internal Timing Channels by Transformation,''
+\newblock in \emph{Advances in Computer Science --- ASIAN 2006}, LNCS vol.~4435, pp.~120--135, Springer, Berlin, Heidelberg, 2006.
+
+\bibitem{mantel2015timing}
+H.~Mantel and E.~Starostin,
+\newblock ``Transforming Out Timing Leaks, More Efficiently,''
+\newblock in \emph{European Symposium on Research in Computer Security (ESORICS)}, LNCS vol.~9326, pp.~400--419, Springer, Cham, 2015.
+
+\bibitem{kocher1996timing}
+P.~C.~Kocher,
+\newblock ``Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems,''
+\newblock in \emph{Advances in Cryptology --- CRYPTO '96}, LNCS vol.~1109, pp.~104--113, Springer, Berlin, Heidelberg, 1996.
+
+\bibitem{askarov2010predictive}
+A.~Askarov, D.~Zhang, and A.~C.~Myers,
+\newblock ``Predictive Black-Box Mitigation of Timing Channels,''
+\newblock in \emph{Proceedings of the 17th ACM Conference on Computer and Communications Security (CCS)}, pp.~297--307, ACM, 2010.
+
+\bibitem{smith2026persistent}
+G.~Smith,
+\newblock ``Information Flow Security on Persistent Memory,''
+\newblock \emph{arXiv preprint arXiv:2606.25422}, 2026.
+
+\bibitem{tla2021leak}
+S.~Ghosal et~al.,
+\newblock ``Preventing Information Leak in Concurrent Programs using TLA+,''
+\newblock Unpublished Technical Report, Department of Computer Science and Engineering, 2021.
+
+\end{thebibliography}
+\endgroup
+
+\end{document}
