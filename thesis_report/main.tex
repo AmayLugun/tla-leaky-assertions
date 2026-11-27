@@ -1020,23 +1020,23 @@ end algorithm; *)
 
 \subsection{Leakage Mechanism and Secret Variables}
 The benchmark exhibits both timing and ordering side channels:
-\begin{itemize}[itemsep=0.08em, topsep=0.06em]
+\begin{itemize}[itemsep=0.05em, topsep=0.04em]
     \item \textbf{Secret Variable}: $h \in \{0, 1\}$ (High Security), determines whether Process~$T_2$ enters the critical region.
-    \item \textbf{Timing Side Channel}: If $h = 0$, Process~$T_2$ does not enter the critical section in the semaphore and finishes quickly (execution time difference $\Delta$ between exit time $t'$ and entry time $T_{\text{start}}$ is $\Delta \le 3$). If $h = 1$, Process~$T_2$ has to wait for the semaphore to be released behind $T_1$ and experiences a long delay ($\Delta \ge 7$).
-    \item \textbf{Ordering Side Channel}: The observable outputs in `\texttt{out}' differ depending on $h$. If $h = 1$, processes follow the ordering ``a'', ``c'', ``d'', ``b'' ($\langle \text{"a"}, \text{"c"}, \text{"d"}, \text{"b"} \rangle$). If $h = 0$, $T_2$ can leave earlier meaning the observable outputs may be in an alternative ordering, for example ``c'', ``a'', ``d'', ``b'' ($\langle \text{"c"}, \text{"a"}, \text{"d"}, \text{"b"} \rangle$).
+    \item \textbf{Timing Side Channel}: When $h = 0$, Process~$T_2$ bypasses the semaphore critical section and finishes quickly ($\Delta = t' - T_{\text{start}} \le 3$). When $h = 1$, $T_2$ contends behind $T_1$ for the semaphore and suffers observable delay ($\Delta \ge 7$).
+    \item \textbf{Ordering Side Channel}: Observable outputs in `\texttt{out}' differ by secret: when $h = 1$, serialization forces trace $\langle \text{"a"}, \text{"c"}, \text{"d"}, \text{"b"} \rangle$; when $h = 0$, $T_2$ terminates earlier, permitting alternate orderings such as $\langle \text{"c"}, \text{"a"}, \text{"d"}, \text{"b"} \rangle$.
 \end{itemize}
 
 \subsection{Layered Invariants and Leaky Assertions Formulation}
-\enlargethispage{4.0\baselineskip}
-To rigorously evaluate functional correctness, side-channel leakage, and attacker deduction, the specification in \texttt{ConcurrentLeak.tla} is structured into three formal layers of invariants, as defined in Listing~\ref{lst:concurrent-invariants}:
-\begin{itemize}[itemsep=0.08em, topsep=0.06em]
-    \item \textbf{Functional Invariants}: $\texttt{TypeOK}$ ensures variables take valid values within their mathematical domains. $\texttt{GlobalInv}$ enforces binary mutual exclusion across concurrent critical regions ($\texttt{sem} + \text{in\_crit}_1 + \text{in\_crit}_2 = 1$). $\texttt{FunctionalPost}$ asserts that upon termination, the functional computation computes the correct output ($v = 1 + 2h$) and restores $\texttt{sem} = 1$.
-    \item \textbf{Observation Layer}: Evaluated at the public exit point where $\texttt{Observed} \triangleq (pc[2] = \text{"Done"})$ and duration $\Delta \triangleq t' - T_{\text{start}}$ (formulated in TLA+ as \texttt{Delta == t\_prime - T\_start}). Ordering predicate $\texttt{ACDB}$ checks whether public characters appear in order $\langle \text{"a"}, \text{"c"}, \text{"d"}, \text{"b"} \rangle$.
-    \item \textbf{Calibration Bounds}: $\texttt{Calib0}$ and $\texttt{Calib1}$ establish baseline duration bounds under arbitrary thread interleavings: $\Delta \in [2, 7]$ when $h = 0$, and $\Delta \in [4, 9]$ when $h = 1$.
-    \item \textbf{Attacker Leaky Assertions}: $\texttt{LA\_Low}$ and $\texttt{LA\_High}$ encode deduction of secret $h$ from thresholded execution duration $\Delta$, while $\texttt{LA\_Trace}$ deduces $h = 0$ upon observing sequence $\texttt{ACDB}$.
-    \item \textbf{Security Invariants (Non-Interference)}: $\texttt{NoTimingLeak}$ and $\texttt{NoOrderLeak}$ express observational equivalence. TLC refutes these to generate counterexample traces.
+To evaluate functional correctness, side-channel leakage, and attacker deduction, \texttt{ConcurrentLeak.tla} defines three invariant layers (Listing~\ref{lst:concurrent-invariants}):
+\begin{itemize}[itemsep=0.05em, topsep=0.04em]
+    \item \textbf{Functional Invariants}: $\texttt{TypeOK}$ ensures valid variable domains. $\texttt{GlobalInv}$ enforces binary mutual exclusion across critical regions ($\texttt{sem} + \text{in\_crit}_1 + \text{in\_crit}_2 = 1$). $\texttt{FunctionalPost}$ asserts that upon termination, $v = 1 + 2h$ and $\texttt{sem} = 1$.
+    \item \textbf{Observation Layer}: Evaluated at public exit ($\texttt{Observed} \triangleq pc[2] = \text{"Done"}$) with duration $\Delta \triangleq t' - T_{\text{start}}$. Ordering predicate $\texttt{ACDB}$ checks if public characters appear in order $\langle \text{"a"}, \text{"c"}, \text{"d"}, \text{"b"} \rangle$.
+    \item \textbf{Calibration Bounds}: $\texttt{Calib0}$ and $\texttt{Calib1}$ establish duration bounds under arbitrary interleavings: $\Delta \in [2, 7]$ for $h = 0$, and $\Delta \in [4, 9]$ for $h = 1$.
+    \item \textbf{Attacker Leaky Assertions}: $\texttt{LA\_Low}$ and $\texttt{LA\_High}$ deduce secret $h$ from thresholded duration $\Delta$, while $\texttt{LA\_Trace}$ deduces $h = 0$ upon observing sequence $\texttt{ACDB}$.
+    \item \textbf{Security Invariants (Non-Interference)}: $\texttt{NoTimingLeak}$ and $\texttt{NoOrderLeak}$ express observational equivalence; TLC refutes these to generate counterexample traces.
 \end{itemize}
 
+\clearpage
 \begin{lstlisting}[style=pluscalstyle, caption={TLA+ layered invariants and leaky assertions for ConcurrentLeak.}, label={lst:concurrent-invariants}]
 (* ================= FUNCTIONAL LAYER ================= *)
 T1Crit == {"T1_2", "T1_3", "T1_4", "T1_5"}
@@ -1079,6 +1079,7 @@ LA_Trace == ACDB => h = 0
 NoTimingLeak == Observed => (Delta >= Delta_lo /\ Delta < Delta_hi)
 NoOrderLeak  == ~ACDB
 \end{lstlisting}
+\clearpage
 
 \subsection{TLC Model Configuration and Verification Metrics}
 The TLC model configuration sets execution bounds: $\Delta_{\text{lo}} = 4$ and $\Delta_{\text{hi}} = 8$.
